@@ -1,0 +1,22 @@
+# Build outputs
+dist/
+.angular/
+coverage/
+node_modules/
+
+# Environment files
+.env
+.env.*
+
+# Generated files
+*.spec.ts.snap
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log

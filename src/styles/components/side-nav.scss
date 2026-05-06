@@ -1,0 +1,7 @@
+@use '@angular/material' as mat;
+
+@include mat.sidenav-overrides(
+  (
+    container-shape: 0,
+  )
+);

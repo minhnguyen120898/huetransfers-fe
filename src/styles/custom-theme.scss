@@ -1,0 +1,49 @@
+@use '@angular/material' as mat;
+@use './theme/custom-colors' as theme;
+
+// Custom project colors (legacy/non-Material components)
+:root {
+  --primary: #4266e9;
+  --ag-grid-text: #667085;
+  --ag-grid-border: #eaecf0;
+  --light-gray: #f1f5f9;
+  --light-blue: #f7fcfe;
+  --success: #00921e;
+  --light-yellow: #fef3c7;
+  --smokey-grey: #707070;
+  --ag-grid-inactive-row: #b4bac3;
+  --font-satoshi: 'Satoshi', sans-serif;
+  --font-clash-display: 'Clash Display', sans-serif;
+  --font-ibm-plex-sans: 'IBM Plex Sans', sans-serif;
+  --font-martian-mono: 'Martian Mono', monospace;
+}
+
+// Apply Material M3 theme using officially generated custom colors
+// Generated from: primary #00639b, tertiary #9d4064
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: theme.$primary-palette,
+        tertiary: theme.$tertiary-palette,
+      ),
+      typography: (
+        plain-family: 'Satoshi',
+        bold-weight: 600,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: 0,
+    ),
+    $overrides: (
+      primary: var(--primary),
+      // For cards, dialogs, etc.
+      surface-container: white,
+      surface-container-low: white,
+      // For elevated surfaces
+      surface: white,
+      // For borders
+      outline: var(--ag-grid-border)
+    )
+  );
+}

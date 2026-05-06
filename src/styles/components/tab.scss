@@ -1,0 +1,15 @@
+.mdc-tab {
+  padding: 0 32px !important;
+}
+
+.no-scrollbar {
+  .mat-mdc-tab-body-content {
+    overflow: hidden;
+  }
+}
+
+.tab-content-full-height {
+  .mat-mdc-tab-body-wrapper {
+    flex: 1;
+  }
+}

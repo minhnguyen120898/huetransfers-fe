@@ -1,0 +1,12 @@
+@use '@angular/material' as mat;
+@use '../theme/custom-colors' as theme;
+@use 'sass:map';
+
+@include mat.datepicker-overrides(
+  (
+    calendar-container-background-color: var(--mat-sys-surface),
+    calendar-container-elevation-shadow: 0 0 0 1px var(--mat-sys-outline),
+    calendar-container-shape: 6px,
+    calendar-date-in-overlap-range-selected-state-background-color: var(--mat-sys-primary),
+  )
+);

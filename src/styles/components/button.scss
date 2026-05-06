@@ -1,0 +1,150 @@
+@use '@angular/material' as mat;
+@use '../theme/custom-colors' as theme;
+@use 'sass:map';
+
+.btn-rounded-xl {
+  @include mat.button-overrides(
+    (
+      outlined-container-shape: 6px,
+      filled-container-shape: 6px,
+      text-container-shape: 6px,
+      protected-container-shape: 6px,
+    )
+  );
+}
+
+.btn-sm {
+  @include mat.button-overrides(
+    (
+      filled-horizontal-padding: 16px,
+      outlined-horizontal-padding: 16px,
+      text-horizontal-padding: 16px,
+      protected-horizontal-padding: 16px,
+    )
+  );
+}
+
+.btn-large {
+  @include mat.button-overrides(
+    (
+      filled-container-height: 48px,
+      outlined-container-height: 48px,
+      text-container-height: 48px,
+      protected-container-height: 48px,
+    )
+  );
+}
+
+.btn-neutral {
+  @include mat.button-overrides(
+    (
+      filled-label-text-color: map.get(theme.$neutral-palette, 10),
+      outlined-label-text-color: map.get(theme.$neutral-palette, 10),
+      protected-label-text-color: map.get(theme.$neutral-palette, 10),
+      text-label-text-color: map.get(theme.$neutral-palette, 10),
+    )
+  );
+}
+
+.btn-white {
+  @include mat.button-overrides(
+    (
+      filled-container-color: white,
+      filled-label-text-color: map.get(theme.$primary-palette, 40),
+      outlined-label-text-color: map.get(theme.$primary-palette, 40),
+      protected-label-text-color: map.get(theme.$primary-palette, 40),
+      text-label-text-color: map.get(theme.$primary-palette, 40),
+      filled-state-layer-color: map.get(theme.$primary-palette, 80),
+      outlined-state-layer-color: map.get(theme.$primary-palette, 80),
+      text-state-layer-color: map.get(theme.$primary-palette, 80),
+    )
+  );
+}
+
+.btn-success {
+  @include mat.button-overrides(
+    (
+      filled-container-color: map.get(theme.$success-palette, 40),
+      filled-label-text-color: map.get(theme.$success-palette, 100),
+      outlined-outline-color: map.get(theme.$success-palette, 40),
+      outlined-label-text-color: map.get(theme.$success-palette, 40),
+      protected-label-text-color: map.get(theme.$success-palette, 40),
+      filled-state-layer-color: map.get(theme.$success-palette, 80),
+      outlined-state-layer-color: map.get(theme.$success-palette, 80),
+      text-state-layer-color: map.get(theme.$success-palette, 80),
+    )
+  );
+
+  @extend .btn-rounded-xl;
+}
+
+.btn-error {
+  @include mat.button-overrides(
+    (
+      filled-container-color: map.get(theme.$error-palette, 40),
+      filled-label-text-color: map.get(theme.$error-palette, 100),
+      outlined-outline-color: map.get(theme.$error-palette, 40),
+      outlined-label-text-color: map.get(theme.$error-palette, 40),
+      protected-label-text-color: map.get(theme.$error-palette, 40),
+      filled-state-layer-color: map.get(theme.$error-palette, 80),
+      outlined-state-layer-color: map.get(theme.$error-palette, 80),
+      text-state-layer-color: map.get(theme.$error-palette, 80),
+    )
+  );
+
+  @extend .btn-rounded-xl;
+}
+
+.bg-arrow-color {
+  @include mat.button-overrides(
+    (
+      filled-container-color: map.get(theme.$primary-palette, 90),
+      filled-horizontal-padding: 0px,
+    )
+  );
+}
+
+.btn-tertiary {
+  @include mat.button-overrides(
+    (
+      filled-container-color: map.get(theme.$tertiary-palette, 40),
+      filled-label-text-color: map.get(theme.$tertiary-palette, 100),
+      outlined-outline-color: map.get(theme.$tertiary-palette, 40),
+      outlined-label-text-color: map.get(theme.$tertiary-palette, 40),
+      filled-state-layer-color: map.get(theme.$tertiary-palette, 80),
+      outlined-state-layer-color: map.get(theme.$tertiary-palette, 80),
+      text-state-layer-color: map.get(theme.$tertiary-palette, 80),
+    )
+  );
+
+  @extend .btn-rounded-xl;
+}
+
+.flat-style-mini-fab {
+  @include mat.fab-overrides(
+    (
+      small-container-elevation-shadow: none,
+      small-focus-container-elevation-shadow: none,
+      small-hover-container-elevation-shadow: none,
+      small-pressed-container-elevation-shadow: none,
+      container-shape: 6px,
+    )
+  );
+
+  &.neutral {
+    @include mat.fab-overrides(
+      (
+        small-container-color: map.get(theme.$neutral-palette, 90),
+        small-foreground-color: map.get(theme.$neutral-palette, 30),
+      )
+    );
+  }
+}
+
+.btn-icon-sm {
+  @include mat.icon-button-overrides(
+    (
+      icon-size: 16px,
+    )
+  );
+}

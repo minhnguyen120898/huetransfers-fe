@@ -41,3 +41,18 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+# Added by code-review-graph
+.code-review-graph/
+.claude/
+
+# Environment
+.env.e2e
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+package-lock.json

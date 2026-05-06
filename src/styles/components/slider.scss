@@ -1,0 +1,25 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.slider-overrides(
+    (
+      value-indicator-width: auto,
+      value-indicator-height: auto,
+      value-indicator-padding: 8px 12px,
+      value-indicator-border-radius: 6px,
+      value-indicator-container-transform: translateX(-50%),
+      value-indicator-caret-display: block,
+      with-tick-marks-container-size: 8px,
+      with-tick-marks-container-shape: 50%,
+      value-indicator-opacity: 1,
+      inactive-track-color: var(--mat-sys-inverse-primary),
+      with-tick-marks-active-container-color: var(--mat-sys-primary),
+      with-tick-marks-active-container-opacity: 1,
+      value-indicator-text-transform: none,
+    )
+  );
+}
+
+.mdc-slider__value-indicator {
+  transform: scale(1) !important;
+}

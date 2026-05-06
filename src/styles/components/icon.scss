@@ -1,0 +1,85 @@
+@use '@angular/material' as mat;
+@use '../theme/custom-colors' as theme;
+@use 'sass:map';
+
+.primary-icon {
+  @include mat.icon-overrides(
+    (
+      color: var(--mat-sys-primary),
+    )
+  );
+}
+
+.error-icon {
+  @include mat.icon-overrides(
+    (
+      color: var(--mat-sys-error),
+    )
+  );
+}
+
+.success-icon {
+  @include mat.icon-overrides(
+    (
+      color: map.get(theme.$success-palette, 40),
+    )
+  );
+}
+
+.white-icon {
+  @include mat.icon-overrides(
+    (
+      color: white,
+    )
+  );
+}
+
+.gray-icon {
+  @include mat.icon-overrides(
+    (
+      color: var(--color-gray-300),
+    )
+  );
+}
+
+mat-icon.icon-xs {
+  font-size: 0.875rem !important;
+  width: 0.875rem !important;
+  height: 0.875rem !important;
+}
+
+mat-icon.icon-sm {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+mat-icon.icon-md {
+  font-size: 1.15rem !important;
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+}
+
+mat-icon.icon-lg {
+  font-size: 1.5rem !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+mat-icon.icon-xl {
+  font-size: 2rem !important;
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+mat-icon.icon-2xl {
+  font-size: 2.5rem !important;
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+mat-icon.icon-3xl {
+  font-size: 3rem !important;
+  width: 3rem !important;
+  height: 3rem !important;
+}

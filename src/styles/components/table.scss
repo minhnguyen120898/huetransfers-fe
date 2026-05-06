@@ -1,0 +1,80 @@
+@use '@angular/material' as mat;
+
+// Material Design tokens for table customization
+// Reference: https://material.angular.dev/components/table/styling
+:root {
+  @include mat.table-overrides(
+    (
+      background-color: transparent,
+      header-headline-color: #667085,
+    )
+  );
+}
+
+// Custom table styling using CSS variables
+.mat-mdc-table {
+  // Cell text color
+  td.mat-mdc-cell {
+    color: #667085;
+    font-size: 14px;
+  }
+
+  // Header styling
+  th.mat-mdc-header-cell {
+    color: #344054;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+}
+
+/* Custom row colors for striping */
+.mat-mdc-table tbody,
+.mat-mdc-table tfoot,
+.mat-mdc-table thead,
+.mat-mdc-cell,
+.mat-mdc-footer-cell,
+.mat-mdc-header-row,
+.mat-mdc-row,
+.mat-mdc-footer-row,
+.mat-mdc-table .mat-mdc-header-cell {
+  &.table-row-odd {
+    background: var(--color-blue-100);
+  }
+
+  &.table-row-even {
+    background: #fff;
+  }
+}
+
+/* Booking day-group alternating colors (override striping) */
+.booking-day-even {
+  background-color: antiquewhite !important;
+}
+
+.booking-day-odd {
+  background-color: #ffffff !important;
+}
+
+/* Cell truncation for better UX with long content */
+.mat-mdc-table {
+  // Force table layout for consistent column widths
+  table-layout: fixed;
+
+  .mat-mdc-row {
+    min-height: 52px;
+  }
+
+  // Header cells should also respect max-width
+  .mat-mdc-header-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// Multiline tooltip styling for better readability
+.multiline-tooltip {
+  white-space: pre-wrap !important;
+  max-width: 300px !important;
+  line-height: 1.4 !important;
+}

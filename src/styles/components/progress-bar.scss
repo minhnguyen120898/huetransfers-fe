@@ -1,0 +1,44 @@
+@use '@angular/material' as mat;
+
+.mat-progress-bar-large {
+  @include mat.progress-bar-overrides(
+    (
+      track-height: 16px,
+      active-indicator-height: 16px,
+    )
+  );
+}
+
+.score-progress-bar {
+  @include mat.progress-bar-overrides(
+    (
+      active-indicator-color: transparent,
+      track-color: #f0f0f0,
+      track-height: 16px,
+    )
+  );
+
+  &.mdc-linear-progress {
+    height: 16px;
+    --mdc-linear-progress-size: 16px;
+  }
+
+  .mdc-linear-progress__bar,
+  .mdc-linear-progress__bar-inner,
+  .mat-progress-bar-buffer,
+  .mdc-linear-progress__buffer,
+  .mdc-linear-progress__buffer-bar {
+    height: 100%;
+  }
+
+  .mdc-linear-progress__primary-bar,
+  .mdc-linear-progress__primary-bar .mdc-linear-progress__bar-inner,
+  .mat-progress-bar-fill::after {
+    background: linear-gradient(to right, red 0%, lawngreen 100%) !important;
+  }
+
+  .mdc-linear-progress__secondary-bar,
+  .mdc-linear-progress__secondary-bar .mdc-linear-progress__bar-inner {
+    background: transparent !important;
+  }
+}

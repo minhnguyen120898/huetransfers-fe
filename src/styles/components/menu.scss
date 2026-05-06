@@ -1,0 +1,24 @@
+@use '@angular/material' as mat;
+
+@include mat.menu-overrides(
+  (
+    divider-bottom-spacing: 4px,
+    divider-top-spacing: 4px,
+  )
+);
+
+.menu-item-error {
+  @include mat.menu-overrides(
+    (
+      item-icon-color: var(--mat-sys-error),
+    )
+  );
+}
+
+.menu-item-sm.mat-mdc-menu-item {
+  min-height: 40px;
+}
+
+.wide-menu.mat-mdc-menu-panel {
+  max-width: 384px;
+}

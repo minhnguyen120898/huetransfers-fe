@@ -1,0 +1,52 @@
+@use '@angular/material' as mat;
+
+@include mat.list-overrides(
+  (
+    list-item-selected-container-color: #1a1b2314,
+    list-item-label-text-weight: 500,
+  )
+);
+
+.primary {
+  @include mat.list-overrides(
+    (
+      active-indicator-shape: var(--mat-sys-shape-small),
+      active-indicator-color: var(--mat-sys-primary),
+      list-item-label-text-color: var(--mat-sys-on-primary),
+      list-item-hover-label-text-color: var(--mat-sys-on-primary),
+    )
+  );
+}
+
+.highlighted {
+  @include mat.list-overrides(
+    (
+      list-item-container-color: var(--light-blue),
+    )
+  );
+}
+
+.side-nav-item {
+  @include mat.list-overrides(
+    (
+      list-item-container-shape: 0,
+      active-indicator-shape: 0,
+    )
+  );
+}
+
+.side-nav-item-one-line {
+  @include mat.list-overrides(
+    (
+      list-item-one-line-container-height: 56px,
+    )
+  );
+}
+
+.height-80 {
+  @include mat.list-overrides(
+    (
+      list-item-one-line-container-height: 80px,
+    )
+  );
+}

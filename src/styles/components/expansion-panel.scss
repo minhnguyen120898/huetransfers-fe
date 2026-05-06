@@ -1,0 +1,25 @@
+@use '@angular/material' as mat;
+
+@include mat.expansion-overrides(
+  (
+    header-collapsed-state-height: 72px,
+  )
+);
+
+.custom-accordion {
+  .mat-expansion-panel-header {
+    padding: 0 !important;
+    padding-left: 16px !important;
+  }
+
+  .mat-expansion-toggle-indicator-before .mat-content.mat-content-hide-toggle {
+    margin-left: 8px !important;
+  }
+
+  @include mat.expansion-overrides(
+    (
+      header-collapsed-state-height: auto,
+      header-expanded-state-height: auto,
+    )
+  );
+}

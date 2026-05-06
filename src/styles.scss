@@ -1,1 +1,199 @@
-/* You can add global styles to this file, and also import other style files */
+// Import Material theme FIRST (before Tailwind)
+@use './styles/custom-theme.scss';
+@use './styles/components/index.scss';
+
+// Then import Tailwind (so it doesn't override Material styles)
+@use 'tailwindcss';
+
+// Tailwind v4 Theme Configuration
+// Map Material Design system variables to Tailwind colors
+@theme {
+  /* Color System - Material to Tailwind mapping */
+  --color-primary: var(--mat-sys-primary);
+  --color-primary-foreground: var(--mat-sys-on-primary);
+  --color-primary-container: var(--mat-sys-primary-container);
+  --color-primary-fixed: var(--mat-sys-primary-fixed);
+  --color-primary-fixed-dim: var(--mat-sys-primary-fixed-dim);
+
+  --color-secondary: var(--mat-sys-secondary);
+  --color-secondary-foreground: var(--mat-sys-on-secondary);
+  --color-secondary-container: var(--mat-sys-secondary-container);
+
+  --color-tertiary: var(--mat-sys-tertiary);
+  --color-tertiary-foreground: var(--mat-sys-on-tertiary);
+  --color-tertiary-container: var(--mat-sys-tertiary-container);
+
+  --color-error: var(--mat-sys-error);
+  --color-error-foreground: var(--mat-sys-on-error);
+  --color-error-container: var(--mat-sys-error-container);
+
+  --color-background: var(--mat-sys-background);
+  --color-foreground: var(--mat-sys-on-background);
+
+  --color-surface: var(--mat-sys-surface);
+  --color-surface-foreground: var(--mat-sys-on-surface);
+  --color-surface-variant: var(--mat-sys-surface-variant);
+  --color-surface-container: var(--mat-sys-surface-container);
+  --color-surface-container-low: var(--mat-sys-surface-container-low);
+  --color-surface-container-high: var(--mat-sys-surface-container-high);
+  --color-surface-container-highest: var(--mat-sys-surface-container-highest);
+
+  --color-outline: var(--mat-sys-outline);
+  --color-outline-variant: var(--mat-sys-outline-variant);
+
+  /* Semantic color aliases */
+  --color-border: var(--ag-grid-border);
+  --color-input: var(--mat-sys-outline);
+  --color-ring: var(--mat-sys-primary);
+
+  --color-card: var(--mat-sys-surface-container);
+  --color-card-foreground: var(--mat-sys-on-surface);
+
+  --color-muted: var(--mat-sys-surface-container-low);
+  --color-muted-foreground: var(--mat-sys-on-surface-variant);
+
+  --color-destructive: var(--mat-sys-error);
+  --color-destructive-foreground: var(--mat-sys-on-error);
+
+  /* Custom project colors */
+  --color-success: var(--success);
+  --color-light-gray: var(--light-gray);
+  --color-light-blue: var(--light-blue);
+  --color-light-yellow: var(--light-yellow);
+  --color-smokey-grey: var(--smokey-grey);
+
+  /* Custom animations */
+  @keyframes blob {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  --animate-blob: blob 7s infinite;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-shake: shake 0.3s ease-in-out;
+}
+
+/* Global Styles */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Satoshi', sans-serif;
+}
+
+body {
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-weight: 500;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Animation Delays */
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Override Tailwind's default border color to use --ag-grid-border */
+* {
+  border-color: var(--ag-grid-border);
+}
+
+/* Material + Tailwind Compatibility Fixes */
+.mdc-notched-outline__notch {
+  border-style: none;
+}
+
+.mat-mdc-icon-button {
+  line-height: normal;
+}
+
+.mat-mdc-option .mat-icon {
+  margin-right: 0 !important;
+}
+
+.sidenav-container {
+  .mat-drawer-inner-container::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.mat-mdc-dialog-title::before {
+  content: none !important;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

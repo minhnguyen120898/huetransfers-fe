@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+
+@include mat.card-overrides(
+  (
+    outlined-outline-color: var(--mat-sys-outline),
+    subtitle-text-color: var(--mat-sys-secondary),
+  )
+);
+
+.card-sm {
+  @include mat.card-overrides(
+    (
+      elevated-container-shape: var(--mat-sys-corner-small),
+      outlined-container-shape: var(--mat-sys-corner-small),
+    )
+  );
+}
+
+.card-primary {
+  @include mat.card-overrides(
+    (
+      outlined-container-color: var(--color-blue-100),
+    )
+  );
+}
+
+.mat-mdc-card-actions {
+  padding: 16px !important;
+}

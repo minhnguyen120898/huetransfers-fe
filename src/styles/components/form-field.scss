@@ -1,0 +1,18 @@
+@use '@angular/material' as mat;
+
+.form-field-sm {
+  @include mat.form-field-overrides(
+    (
+      container-height: 40px,
+      container-vertical-padding: 8px,
+      filled-with-label-container-padding-top: 8px,
+      filled-with-label-container-padding-bottom: 8px,
+      filled-label-text-size: 14px,
+      outlined-label-text-size: 14px,
+    )
+  );
+}
+
+.mat-error {
+  color: var(--mat-sys-error);
+}

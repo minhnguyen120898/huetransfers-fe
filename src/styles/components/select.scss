@@ -1,0 +1,10 @@
+@use '@angular/material' as mat;
+
+:root {
+  @include mat.select-overrides(
+    (
+      trigger-text-line-height: 1.25,
+      trigger-text-size: 14px,
+    )
+  );
+}

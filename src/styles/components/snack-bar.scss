@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+@use '../theme/custom-colors' as theme;
+@use 'sass:map';
+
+.success-snackbar {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: map.get(theme.$success-palette, 40),
+      button-color: map.get(theme.$success-palette, 100),
+      supporting-text-color: map.get(theme.$success-palette, 100),
+    )
+  );
+}
+
+.error-snackbar {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: map.get(theme.$error-palette, 40),
+      button-color: map.get(theme.$error-palette, 100),
+      supporting-text-color: map.get(theme.$error-palette, 100),
+    )
+  );
+}
