@@ -1,0 +1,390 @@
+<!-- Loading State -->
+@if (dataSource.loading()) {
+  <app-loading-spinner [message]="loadingMessage" />
+}
+
+<!-- Error State -->
+@if (dataSource.hasError() && !dataSource.loading()) {
+  <app-error-state [title]="errorTitle" [message]="dataSource.error()!" (retry)="onRetry()" />
+}
+
+<!-- Empty State -->
+@if (dataSource.isEmpty() && !dataSource.loading() && !dataSource.hasError()) {
+  <app-empty-state
+    [icon]="emptyStateIcon"
+    [title]="emptyStateTitle"
+    [message]="emptyStateMessage"
+    [actionText]="emptyStateActionLabel"
+    [showAction]="!!emptyStateActionLabel"
+    (action)="onEmptyStateAction()"
+  />
+}
+
+<!-- Table with Data -->
+@if (dataSource.hasData() && !dataSource.loading() && !dataSource.hasError()) {
+  <!-- Mobile Card View -->
+  @if (isMobile() && mobileCardViewMode) {
+    <div class="space-y-3" [class]="stickyHeader ? tableMaxHeightClass + ' overflow-auto' : ''">
+      @for (row of dataSource.data(); track trackByFn($index, row); let i = $index) {
+        <div
+          class="bg-white shadow rounded-lg overflow-hidden border-l-4 {{
+            getRowClass(row, i) ? 'border-l-amber-400' : 'border-l-gray-300'
+          }}"
+          (click)="onRowClick(row)"
+        >
+          <!-- Card Header: Index + Header Columns (configurable via mobileCardHeaderKeys) -->
+          <div
+            class="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200"
+          >
+            <div class="w-full flex items-center gap-3">
+              <span class="text-sm font-bold text-gray-500">#{{ getRowIndex(row) }}</span>
+              <div class="flex-1 flex items-center justify-between">
+                @for (headerCol of getMobileCardHeaderColumns(); track headerCol.key) {
+                  @if (headerCol.type === 'badge') {
+                    @let badge = getBadgeConfig(getCellValue(row, headerCol), headerCol);
+                    <mat-chip [class]="badge.class" class="!text-xs">
+                      {{ badge.label }}
+                    </mat-chip>
+                  } @else if (headerCol.cellTemplate) {
+                    <ng-container
+                      *ngTemplateOutlet="
+                        headerCol.cellTemplate;
+                        context: { $implicit: row, value: getCellValue(row, headerCol) }
+                      "
+                    />
+                  } @else if (headerCol.type === 'date') {
+                    <span class="text-sm font-medium text-gray-700">
+                      {{ formatDateValue(getCellValue(row, headerCol)) }}
+                    </span>
+                  } @else {
+                    <span class="text-sm font-medium text-gray-700">
+                      {{ formatCellValue(getCellValue(row, headerCol), row, headerCol) }}
+                    </span>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Body: Other columns -->
+          <div class="px-4 py-3 space-y-2">
+            @for (column of getMobileCardDisplayColumns(i); track column.key) {
+              <div class="flex justify-between items-start gap-2">
+                <span class="text-xs text-gray-500 uppercase shrink-0">{{ column.header }}</span>
+                <div class="text-sm text-gray-700 text-right">
+                  @if (column.cellTemplate) {
+                    <ng-container
+                      *ngTemplateOutlet="
+                        column.cellTemplate;
+                        context: { $implicit: row, value: getCellValue(row, column) }
+                      "
+                    />
+                  } @else {
+                    @switch (column.type) {
+                      @case ('badge') {
+                        @let badge = getBadgeConfig(getCellValue(row, column), column);
+                        <mat-chip [class]="badge.class" class="!text-xs">
+                          {{ badge.label }}
+                        </mat-chip>
+                      }
+                      @case ('boolean') {
+                        @let value = getCellValue(row, column);
+                        <span [class]="value ? 'text-green-600' : 'text-gray-400'">
+                          <mat-icon class="!text-sm">
+                            {{ value ? 'check_circle' : 'cancel' }}
+                          </mat-icon>
+                        </span>
+                      }
+                      @case ('date') {
+                        <span>{{ formatDateValue(getCellValue(row, column)) }}</span>
+                      }
+                      @default {
+                        <span>{{ formatCellValue(getCellValue(row, column), row, column) }}</span>
+                      }
+                    }
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- See More / See Less Button -->
+            @if (hasMoreColumns()) {
+              <button
+                type="button"
+                class="w-full text-center text-sm text-blue-600 hover:text-blue-800 flex items-center justify-center gap-1"
+                (click)="toggleRowExpanded(i, $event)"
+              >
+                @if (isRowExpanded(i)) {
+                  <mat-icon class="!text-base">expand_less</mat-icon>
+                  See less
+                } @else {
+                  <mat-icon class="!text-base">expand_more</mat-icon>
+                  See more
+                }
+              </button>
+            }
+          </div>
+
+          <!-- Card Footer: Actions -->
+          @if (actions.length > 0 || actionsTemplate) {
+            <div class="px-4 py-2 bg-gray-50 border-t border-gray-200 flex justify-end gap-2">
+              @if (actionsTemplate) {
+                <ng-container *ngTemplateOutlet="actionsTemplate; context: { $implicit: row }" />
+              } @else {
+                @for (action of actions; track action.id) {
+                  @if (isActionVisible(action, row)) {
+                    <button
+                      mat-icon-button
+                      [color]="action.color || 'default'"
+                      [matTooltip]="getActionTooltip(action, row)"
+                      [disabled]="isActionDisabled(action, row)"
+                      [class]="action.cssClass"
+                      (click)="onActionClick(action, row, $event)"
+                    >
+                      <mat-icon>{{ action.icon }}</mat-icon>
+                    </button>
+                  }
+                }
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Mobile Pagination -->
+      @if (paginated && dataSource.meta()) {
+        <div class="bg-white shadow rounded-lg px-4 py-3">
+          <app-pagination
+            [page]="dataSource.meta()!.page"
+            [pageSize]="dataSource.meta()!.limit"
+            [total]="dataSource.meta()!.total"
+            (pageChange)="onPageChange($event)"
+          />
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- Desktop Table View -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <!-- Table Container with optional sticky header -->
+      <div class="overflow-auto" [class]="stickyHeader ? tableMaxHeightClass : ''">
+        <table mat-table [dataSource]="dataSource.data()" [trackBy]="trackByFn" class="w-full">
+          <!-- Selection Column -->
+          @if (selectable) {
+            <ng-container matColumnDef="select">
+              <!-- Header -->
+              <th mat-header-cell *matHeaderCellDef class="!px-4 !py-3 w-12">
+                <mat-checkbox
+                  [checked]="isAllSelected()"
+                  [indeterminate]="isIndeterminate()"
+                  [disabled]="areAllRowsDisabled()"
+                  (change)="toggleAllRows()"
+                />
+              </th>
+
+              <!-- Body Cell -->
+              <td mat-cell *matCellDef="let row" class="!px-4 !py-4">
+                <mat-checkbox
+                  [checked]="dataSource.isRowSelected(row)"
+                  [disabled]="isRowSelectionDisabled(row)"
+                  (change)="onRowSelectionToggle(row)"
+                  (click)="$event.stopPropagation()"
+                />
+              </td>
+
+              <!-- Footer Cell -->
+              @if (showFooterRow) {
+                <td mat-footer-cell *matFooterCellDef class="!px-4 !py-4"></td>
+              }
+            </ng-container>
+          }
+
+          <!-- Data Columns -->
+          @for (column of columns; track column.key) {
+            @if (column.visible !== false) {
+              <ng-container [matColumnDef]="column.key">
+                <!-- Column Header -->
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  class="!px-4 !py-3 min-w-20 !text-xs !font-medium !text-gray-500 !uppercase !tracking-wider {{
+                    column.headerClass || ''
+                  }}"
+                  [style.text-align]="column.align || 'left'"
+                  [style.min-width]="column.width"
+                  [style.max-width]="column.width"
+                >
+                  @if (column.headerTemplate) {
+                    <ng-container *ngTemplateOutlet="column.headerTemplate" />
+                  } @else {
+                    {{ column.header }}
+                  }
+                </th>
+
+                <!-- Column Body Cell -->
+                <td
+                  mat-cell
+                  *matCellDef="let row"
+                  class="!px-4 !py-4 !text-sm {{ getCellClass(row, column) }}"
+                  [style.text-align]="column.align || 'left'"
+                  [style.max-width]="column.width"
+                >
+                  @if (column.cellTemplate) {
+                    <!-- Custom Template -->
+                    <ng-container
+                      *ngTemplateOutlet="
+                        column.cellTemplate;
+                        context: { $implicit: row, value: getCellValue(row, column) }
+                      "
+                    />
+                  } @else {
+                    @switch (column.type) {
+                      <!-- Serial Number -->
+                      @case ('stt') {
+                        <span class="font-medium">{{ getRowIndex(row) }}</span>
+                      }
+
+                      <!-- Badge Type -->
+                      @case ('badge') {
+                        @let badge = getBadgeConfig(getCellValue(row, column), column);
+                        <mat-chip [class]="badge.class">
+                          {{ badge.label }}
+                        </mat-chip>
+                      }
+
+                      <!-- Boolean Type -->
+                      @case ('boolean') {
+                        @let value = getCellValue(row, column);
+                        <span [class]="value ? 'text-green-600' : 'text-gray-400'">
+                          <mat-icon class="!text-sm">
+                            {{ value ? 'check_circle' : 'cancel' }}
+                          </mat-icon>
+                        </span>
+                      }
+
+                      <!-- Date Type -->
+                      @case ('date') {
+                        <span class="whitespace-nowrap">
+                          {{ formatDateValue(getCellValue(row, column)) }}
+                        </span>
+                      }
+
+                      <!-- Default Text -->
+                      @default {
+                        @let cellValue = formatCellValue(getCellValue(row, column), row, column);
+                        <span
+                          class="line-clamp-2 max-w-full"
+                          [appTooltipIfTruncated]="cellValue"
+                          matTooltipClass="multiline-tooltip"
+                          matTooltipPosition="above"
+                        >
+                          {{ cellValue }}
+                        </span>
+                      }
+                    }
+                  }
+                </td>
+
+                <!-- Column Footer Cell -->
+                @if (showFooterRow) {
+                  <td
+                    mat-footer-cell
+                    *matFooterCellDef
+                    class="!px-4 !py-4 !text-sm"
+                    [style.text-align]="column.align || 'left'"
+                    [style.max-width]="column.width"
+                  >
+                    @let footerValue = getFooterCellValue(column);
+                    @if (footerValue !== null) {
+                      <span class="font-bold whitespace-nowrap">
+                        {{ formatFooterCellValue(footerValue, column) }}
+                      </span>
+                    }
+                  </td>
+                }
+              </ng-container>
+            }
+          }
+
+          <!-- Actions Column -->
+          @if (actions.length > 0 || actionsTemplate) {
+            <ng-container matColumnDef="actions">
+              <!-- Header -->
+              <th mat-header-cell *matHeaderCellDef [class]="getActionHeaderClasses()">Actions</th>
+
+              <!-- Body Cell -->
+              <td mat-cell *matCellDef="let row" [class]="getActionCellClasses()">
+                @if (actionsTemplate) {
+                  <!-- Custom Actions Template -->
+                  <ng-container *ngTemplateOutlet="actionsTemplate; context: { $implicit: row }" />
+                } @else {
+                  <!-- Default Actions -->
+                  <div class="flex gap-2 justify-end">
+                    @for (action of actions; track action.id) {
+                      @if (isActionVisible(action, row)) {
+                        <button
+                          mat-icon-button
+                          [color]="action.color || 'default'"
+                          [matTooltip]="getActionTooltip(action, row)"
+                          [disabled]="isActionDisabled(action, row)"
+                          [class]="action.cssClass"
+                          (click)="onActionClick(action, row, $event)"
+                        >
+                          <mat-icon>{{ action.icon }}</mat-icon>
+                        </button>
+                      }
+                    }
+                  </div>
+                }
+              </td>
+
+              <!-- Footer Cell -->
+              @if (showFooterRow) {
+                <td mat-footer-cell *matFooterCellDef [class]="getActionFooterCellClasses()"></td>
+              }
+            </ng-container>
+          }
+
+          <!-- Table Header Row -->
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: stickyHeader"
+            class="!bg-gray-50"
+          ></tr>
+
+          <!-- Table Data Rows -->
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns; let i = index"
+            class="group hover:bg-gray-50 transition-colors cursor-pointer {{
+              getRowClass(row, i)
+            }}"
+            (click)="onRowClick(row)"
+          ></tr>
+
+          <!-- Table Footer Row -->
+          @if (showFooterRow) {
+            <tr
+              mat-footer-row
+              *matFooterRowDef="displayedColumns; sticky: stickyFooter"
+              class="!bg-[#707070] !text-white cursor-pointer {{ footerRowClass }}"
+              (click)="onFooterRowClick()"
+            ></tr>
+          }
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      @if (paginated && dataSource.meta()) {
+        <div class="border-t border-gray-200 px-6 py-4">
+          <app-pagination
+            [page]="dataSource.meta()!.page"
+            [pageSize]="dataSource.meta()!.limit"
+            [total]="dataSource.meta()!.total"
+            (pageChange)="onPageChange($event)"
+          />
+        </div>
+      }
+    </div>
+  }
+}

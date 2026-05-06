@@ -1,0 +1,20 @@
+<app-dialog>
+  <app-dialog-header [title]="data.title" />
+
+  <app-dialog-content>
+    <p class="text-gray-700">{{ data.message }}</p>
+  </app-dialog-content>
+
+  <app-dialog-actions>
+    <button matButton="text" class="btn-rounded-xl btn-neutral" (click)="onCancel()">
+      {{ data.cancelText || 'Cancel' }}
+    </button>
+    <button
+      matButton="filled"
+      [class]="data.confirmColor === 'warn' ? 'btn-rounded-xl btn-error' : 'btn-primary'"
+      (click)="onConfirm()"
+    >
+      {{ data.confirmText || 'Confirm' }}
+    </button>
+  </app-dialog-actions>
+</app-dialog>

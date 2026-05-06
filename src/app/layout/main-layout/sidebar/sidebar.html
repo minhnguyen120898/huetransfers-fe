@@ -1,0 +1,7 @@
+<div
+  class="flex gap-4 py-1 items-center"
+  [ngClass]="{ 'flex-col px-4 mb-4': isMobile(), 'flex-row': !isMobile() }"
+>
+  <app-tour-selector />
+  <app-month-picker />
+</div>

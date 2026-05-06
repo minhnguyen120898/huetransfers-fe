@@ -1,0 +1,69 @@
+<div class="flex flex-col w-full h-screen relative">
+  <div class="bg-white flex items-center justify-end gap-4 py-2 px-2">
+    @if (sidenavMode() === 'over') {
+      <button mat-icon-button (click)="toggleSidenav()" class="ml-4 mr-auto lg:hidden">
+        <mat-icon>menu</mat-icon>
+      </button>
+    }
+    <app-navbar [isMobile]="isSmallScreen()" class="w-full"></app-navbar>
+  </div>
+
+  <mat-sidenav-container class="flex-1" autosize>
+    <mat-sidenav
+      #sidenav="matSidenav"
+      [fixedInViewport]="false"
+      [mode]="sidenavMode()"
+      [fixedTopGap]="0"
+      [fixedBottomGap]="0"
+      [class]="sidenavClass()"
+      [style.width]="sidenavWidth()"
+    >
+      <!-- Flex container to structure sidenav content -->
+      <div class="flex flex-col h-full">
+        <!-- Navigation items - takes remaining space and scrolls if needed -->
+        <mat-nav-list class="p-2 flex-1 overflow-y-auto scrollbar-hide">
+          @for (item of navigationItems(); track item.label) {
+            @if (!item.hidden) {
+              <app-menu-item
+                [item]="item"
+                [level]="0"
+                [currentUrl]="currentUrl()"
+                [isCollapsed]="isCollapsed()"
+                [menuExpansionState]="menuExpansionState()"
+                (itemClick)="navigateToRoute($event)"
+                (toggleExpansion)="toggleMenuItem($event)"
+              >
+              </app-menu-item>
+            }
+          }
+        </mat-nav-list>
+
+        <!-- Mobile sidebar -->
+        @if (sidenavMode() === 'over') {
+          <app-sidebar [isMobile]="true"></app-sidebar>
+        }
+
+        <!-- Toggle button fixed at bottom for desktop -->
+        @if (sidenavMode() === 'side') {
+          <div class="p-2 border-t border-gray-200 hidden md:block text-right">
+            <button
+              mat-icon-button
+              (click)="toggleCollapse()"
+              class="w-full flex items-center justify-center"
+              [attr.aria-label]="isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+              matTooltip="{{ isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar' }}"
+              matTooltipPosition="right"
+            >
+              <mat-icon>{{ isCollapsed() ? 'menu_open' : 'chevron_left' }}</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="h-full overflow-auto p-4">
+      <ng-content select="[content]"></ng-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

@@ -1,0 +1,17 @@
+<mat-form-field appearance="outline" class="w-full form-field-sm" subscriptSizing="dynamic">
+  <mat-label>Month/Year</mat-label>
+  <input
+    matInput
+    [matDatepicker]="picker"
+    [value]="selectedDate()"
+    readonly
+    placeholder="MM/YYYY"
+  />
+  <mat-datepicker-toggle matIconSuffix [for]="picker" />
+  <mat-datepicker
+    #picker
+    startView="year"
+    (monthSelected)="onMonthSelected($event); picker.close()"
+    panelClass="month-picker-panel"
+  />
+</mat-form-field>

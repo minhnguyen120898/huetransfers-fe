@@ -1,0 +1,12 @@
+<div class="flex flex-col items-center justify-center gap-4 p-8 text-center">
+  <mat-icon class="icon-3xl">{{ icon() }}</mat-icon>
+  <div class="flex flex-col gap-2">
+    <h3 class="text-lg font-semibold text-gray-900">{{ title() }}</h3>
+    <p class="text-gray-600">{{ message() }}</p>
+  </div>
+  @if (showAction() && actionText()) {
+    <button matButton="filled" (click)="onAction()" class="mt-2">
+      {{ actionText() }}
+    </button>
+  }
+</div>
