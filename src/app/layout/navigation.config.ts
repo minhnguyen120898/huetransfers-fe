@@ -2,9 +2,9 @@ import { MenuItemProps } from './main-layout/menu-item/menu-item.model';
 
 export const NAVIGATION_ITEMS: MenuItemProps[] = [
   {
-    icon: 'directions_car',
-    label: 'Car Services',
-    route: '/car-services',
+    icon: 'people',
+    label: 'Users',
+    route: '/users',
     adminOnly: true,
   },
   {
@@ -13,9 +13,9 @@ export const NAVIGATION_ITEMS: MenuItemProps[] = [
     route: '/travel-agencies',
   },
   {
-    icon: 'people',
-    label: 'Users',
-    route: '/users',
+    icon: 'directions_car',
+    label: 'Car Services',
+    route: '/car-services',
     adminOnly: true,
   },
   {
