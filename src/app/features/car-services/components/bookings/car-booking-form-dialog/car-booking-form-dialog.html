@@ -1,0 +1,276 @@
+<app-dialog>
+  <app-dialog-header [title]="dialogTitle" (closed)="onCancel()" />
+
+  <app-dialog-content>
+    @if (isReadOnly) {
+      <div
+        class="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-center gap-2"
+      >
+        <mat-icon class="text-amber-600 text-lg">lock</mat-icon>
+        This booking cannot be edited ({{ booking?.status }} status).
+      </div>
+    }
+    @if (isCompletedMode) {
+      <div
+        class="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 text-sm flex items-center gap-2"
+      >
+        <mat-icon class="text-blue-600 text-lg">info</mat-icon>
+        Only the note can be updated for completed bookings.
+      </div>
+    }
+
+    <form [formGroup]="bookingForm" class="flex flex-col gap-4">
+      <!-- Travel Agency -->
+      <app-agency-autocomplete
+        [agencies]="agencies()"
+        [selectedAgencyId]="bookingForm.controls.travelAgencyId.value"
+        (selectedAgencyIdChange)="bookingForm.controls.travelAgencyId.setValue($event)"
+        [disabled]="bookingForm.controls.travelAgencyId.disabled"
+        [required]="true"
+      />
+      @if (
+        bookingForm.controls.travelAgencyId.touched &&
+        bookingForm.controls.travelAgencyId.hasError('required')
+      ) {
+        <p class="text-xs text-red-600 -mt-2">Travel agency is required</p>
+      }
+
+      <!-- Booking Details -->
+      <div class="border-t pt-4">
+        <h3 class="text-sm font-semibold text-gray-700 mb-3">Booking Details</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Vehicle Type -->
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Vehicle Type</mat-label>
+            <mat-select formControlName="vehicleType">
+              <mat-option [value]="TransportType.SEATS_4">4 Seats</mat-option>
+              <mat-option [value]="TransportType.SEATS_7">7 Seats</mat-option>
+              <mat-option [value]="TransportType.SEATS_16">16 Seats</mat-option>
+              <mat-option [value]="TransportType.SEATS_29">29 Seats</mat-option>
+              <mat-option [value]="TransportType.SEATS_45">45 Seats</mat-option>
+            </mat-select>
+            @if (
+              bookingForm.controls.vehicleType.touched &&
+              bookingForm.controls.vehicleType.hasError('required')
+            ) {
+              <mat-error>Vehicle type is required</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Service Date -->
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Service Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="datePicker"
+              formControlName="serviceDate"
+              placeholder="dd/mm/yyyy"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker" />
+            <mat-datepicker #datePicker />
+            @if (
+              bookingForm.controls.serviceDate.touched &&
+              bookingForm.controls.serviceDate.hasError('required')
+            ) {
+              <mat-error>Service date is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Guest Information -->
+      <div class="border-t pt-4">
+        <h3 class="text-sm font-semibold text-gray-700 mb-3">Guest Information</h3>
+
+        <div class="flex flex-col gap-4">
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Guest Name -->
+            <mat-form-field subscriptSizing="dynamic" appearance="outline">
+              <mat-label>Guest Name</mat-label>
+              <input matInput formControlName="guestName" placeholder="Guest full name" />
+              @if (
+                bookingForm.controls.guestName.touched &&
+                bookingForm.controls.guestName.hasError('required')
+              ) {
+                <mat-error>Guest name is required</mat-error>
+              }
+              @if (
+                bookingForm.controls.guestName.touched &&
+                bookingForm.controls.guestName.hasError('minlength')
+              ) {
+                <mat-error>Guest name must be at least 2 characters</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Guest Phone -->
+            <mat-form-field subscriptSizing="dynamic" appearance="outline">
+              <mat-label>Guest Phone</mat-label>
+              <input matInput formControlName="guestPhone" placeholder="+84-xxx-xxx-xxx" />
+            </mat-form-field>
+          </div>
+
+          <!-- Guest Count -->
+          <mat-form-field subscriptSizing="dynamic" appearance="outline" class="w-full">
+            <mat-label>Guest Count</mat-label>
+            <input matInput type="number" formControlName="guestCount" min="1" max="100" />
+            @if (
+              bookingForm.controls.guestCount.touched &&
+              bookingForm.controls.guestCount.hasError('required')
+            ) {
+              <mat-error>Guest count is required</mat-error>
+            }
+            @if (
+              bookingForm.controls.guestCount.touched &&
+              bookingForm.controls.guestCount.hasError('min')
+            ) {
+              <mat-error>Minimum 1 guest</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Pickup Location -->
+            <mat-form-field subscriptSizing="dynamic" appearance="outline">
+              <mat-label>Pickup Location</mat-label>
+              <input matInput formControlName="pickupLocation" placeholder="e.g. Noi Bai Airport" />
+            </mat-form-field>
+
+            <!-- Dropoff Location -->
+            <mat-form-field subscriptSizing="dynamic" appearance="outline">
+              <mat-label>Dropoff Location</mat-label>
+              <input
+                matInput
+                formControlName="dropoffLocation"
+                placeholder="e.g. Hoan Kiem Hotel"
+              />
+            </mat-form-field>
+          </div>
+
+          <!-- Routes -->
+          <mat-form-field subscriptSizing="dynamic" appearance="outline" class="w-full">
+            <mat-label>Routes</mat-label>
+            <textarea
+              matInput
+              formControlName="routes"
+              rows="2"
+              placeholder="e.g. Airport → Hotel → City Tour"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Financial Information -->
+      <div class="border-t pt-4 bg-amber-50 md:-mx-6 px-1 md:px-6 py-4">
+        <h3 class="text-sm font-semibold text-amber-900 mb-3">💰 Financial Information</h3>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <!-- Selling Price -->
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Selling Price (×1000đ)</mat-label>
+            <input matInput type="text" formControlName="sellingPrice" vndCurrencyFormat />
+            @if (
+              bookingForm.controls.sellingPrice.touched &&
+              bookingForm.controls.sellingPrice.hasError('required')
+            ) {
+              <mat-error>Selling price is required</mat-error>
+            }
+            @if (
+              bookingForm.controls.sellingPrice.touched &&
+              bookingForm.controls.sellingPrice.hasError('min')
+            ) {
+              <mat-error>Must be ≥ 0</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Receiving Price -->
+          <mat-form-field subscriptSizing="dynamic" appearance="outline">
+            <mat-label>Receiving Price (×1000đ)</mat-label>
+            <input matInput type="text" formControlName="receivingPrice" vndCurrencyFormat />
+            @if (
+              bookingForm.controls.receivingPrice.touched &&
+              bookingForm.controls.receivingPrice.hasError('required')
+            ) {
+              <mat-error>Receiving price is required</mat-error>
+            }
+            @if (
+              bookingForm.controls.receivingPrice.touched &&
+              bookingForm.controls.receivingPrice.hasError('min')
+            ) {
+              <mat-error>Must be ≥ 0</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Debt Amount -->
+        <div
+          class="bg-white border-2 rounded-lg p-4 mb-4"
+          [class.border-green-500]="debtAmount() <= 0"
+          [class.border-red-500]="debtAmount() > 0"
+        >
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-medium text-gray-700">Agency Owes (Debt):</span>
+            <span
+              class="text-xl font-bold"
+              [class.text-green-600]="debtAmount() <= 0"
+              [class.text-red-600]="debtAmount() > 0"
+            >
+              {{ debtAmount() | vndCurrency }}
+            </span>
+          </div>
+          <div class="text-xs text-gray-500 mt-1">Formula: Selling Price - Receiving Price</div>
+        </div>
+
+        <!-- Payment Collection -->
+        <div class="mb-4">
+          <label class="text-sm font-medium text-gray-700 block mb-2">Payment Collection</label>
+          <mat-radio-group formControlName="paymentCollection" class="flex flex-col gap-2">
+            <mat-radio-button [value]="CarPaymentCollection.NO_COLLECTION">
+              <span class="font-medium">Không Thu Tiền</span>
+              <span class="text-gray-600 text-sm ml-2">(Agency collects from guest)</span>
+            </mat-radio-button>
+            <mat-radio-button [value]="CarPaymentCollection.COLLECT_FROM_GUEST">
+              <span class="font-medium">Hướng Dẫn Thu Tiền Khách</span>
+              <span class="text-gray-600 text-sm ml-2">(You collect from guest)</span>
+            </mat-radio-button>
+          </mat-radio-group>
+          @if (
+            bookingForm.controls.paymentCollection.touched &&
+            bookingForm.controls.paymentCollection.hasError('required')
+          ) {
+            <p class="text-xs text-red-600 mt-1">Payment collection is required</p>
+          }
+        </div>
+
+        <!-- Payment Collection Note -->
+        <mat-form-field subscriptSizing="dynamic" appearance="outline" class="w-full mb-4">
+          <mat-label>Payment Collection Note</mat-label>
+          <input matInput formControlName="paymentCollectionNote" placeholder="Optional note..." />
+        </mat-form-field>
+
+        <!-- VAT -->
+        <mat-slide-toggle formControlName="vat">VAT</mat-slide-toggle>
+      </div>
+
+      <!-- Notes -->
+      <div class="border-t pt-4">
+        <h3 class="text-sm font-semibold text-gray-700 mb-3">Notes</h3>
+        <mat-form-field subscriptSizing="dynamic" appearance="outline" class="w-full">
+          <textarea
+            matInput
+            formControlName="note"
+            rows="3"
+            placeholder="Additional notes..."
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </form>
+  </app-dialog-content>
+
+  <app-dialog-actions>
+    <button matButton="text" class="btn-rounded-xl btn-neutral" (click)="onCancel()">Cancel</button>
+    @if (!isReadOnly) {
+      <button matButton="filled" class="btn-rounded-xl" (click)="onSubmit()">
+        {{ isEditMode ? 'Save Changes' : 'Create Booking' }}
+      </button>
+    }
+  </app-dialog-actions>
+</app-dialog>

@@ -1,0 +1,74 @@
+<app-table-card title="">
+  <ng-container actions>
+    <form [formGroup]="filtersForm" class="flex flex-wrap gap-3 items-end justify-end w-full">
+      <!-- Status filter -->
+      <mat-form-field class="w-[45%] sm:w-36 form-field-sm" subscriptSizing="dynamic" appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status" (selectionChange)="onStatusChange($event.value)">
+          <mat-option [value]="CarBookingStatusFilter.All">All</mat-option>
+          <mat-option [value]="CarBookingStatusFilter.Confirmed">Confirmed</mat-option>
+          <mat-option [value]="CarBookingStatusFilter.Completed">Completed</mat-option>
+          <mat-option [value]="CarBookingStatusFilter.Cancelled">Cancelled</mat-option>
+          <mat-option [value]="CarBookingStatusFilter.Transferred">Transferred</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Payment status filter -->
+      <mat-form-field class="w-[45%] sm:w-36 form-field-sm" subscriptSizing="dynamic" appearance="outline">
+        <mat-label>Payment</mat-label>
+        <mat-select
+          formControlName="paymentStatus"
+          (selectionChange)="onPaymentStatusChange($event.value)"
+        >
+          <mat-option value="">All</mat-option>
+          <mat-option [value]="PaymentStatus.PENDING">Pending</mat-option>
+          <mat-option [value]="PaymentStatus.PARTIAL">Partial</mat-option>
+          <mat-option [value]="PaymentStatus.COMPLETED">Paid</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Search -->
+      <div class="flex-1 md:max-w-64">
+        <app-search-bar placeholder="Search bookings..." (searchChange)="onSearchChange($event)" />
+      </div>
+
+      <!-- Add button -->
+      <button matButton="filled" class="btn-rounded-xl" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Add Booking
+      </button>
+    </form>
+  </ng-container>
+
+  <div table>
+    <app-data-table
+      [dataSource]="dataSource"
+      [columns]="columns"
+      [actions]="actions"
+      [rowClass]="getRowClass"
+      [stickyActions]="true"
+      [stickyHeader]="true"
+      [paginated]="true"
+      [mobileCardViewMode]="true"
+      [mobileCardHeaderKeys]="['serviceDate', 'status']"
+      [mobileCollapsedColumns]="4"
+      emptyStateIcon="directions_car"
+      emptyStateTitle="No car bookings found"
+      emptyStateMessage="Get started by creating your first car booking."
+      emptyStateActionLabel="Add Car Booking"
+      loadingMessage="Loading car bookings..."
+      errorTitle="Failed to load car bookings"
+      (emptyStateAction)="openCreateDialog()"
+    />
+  </div>
+</app-table-card>
+
+<!-- Service Date Template -->
+<ng-template #serviceDateTemplate let-value="value">
+  <span class="whitespace-nowrap">{{ value | date: 'dd/MM/yyyy' }}</span>
+</ng-template>
+
+<!-- Currency Template -->
+<ng-template #currencyTemplate let-value="value">
+  <span class="whitespace-nowrap">{{ value | vndCurrency }}</span>
+</ng-template>

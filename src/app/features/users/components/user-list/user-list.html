@@ -1,0 +1,55 @@
+<app-table-card title="">
+  <ng-container actions>
+    <form [formGroup]="filtersForm" class="flex gap-4 items-end justify-end w-full flex-wrap">
+      <div class="flex-1 max-w-40 md:max-w-80">
+        <app-search-bar placeholder="Search users..." (searchChange)="onSearchChange($event)" />
+      </div>
+
+      <div class="hidden md:block">
+        <mat-form-field appearance="outline" class="w-36 form-field-sm" subscriptSizing="dynamic">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option value="all">All</mat-option>
+            <mat-option [value]="UserRole.ADMIN">Admin</mat-option>
+            <mat-option [value]="UserRole.USER">User</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="hidden md:block">
+        <mat-form-field appearance="outline" class="w-40 form-field-sm" subscriptSizing="dynamic">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="isActive">
+            <mat-option value="all">All</mat-option>
+            <mat-option [value]="true">Active</mat-option>
+            <mat-option [value]="false">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <button matButton="filled" class="btn-rounded-xl" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Add User
+      </button>
+    </form>
+  </ng-container>
+
+  <div table>
+    <app-data-table
+      [dataSource]="dataSource"
+      [columns]="columns"
+      [actions]="actions"
+      [paginated]="true"
+      [mobileCardViewMode]="true"
+      [mobileCardHeaderKeys]="['fullName', 'role']"
+      [mobileCollapsedColumns]="3"
+      emptyStateIcon="people"
+      emptyStateTitle="No users found"
+      emptyStateMessage="Add the first user to get started."
+      emptyStateActionLabel="Add User"
+      loadingMessage="Loading users..."
+      errorTitle="Failed to load users"
+      (emptyStateAction)="openCreateDialog()"
+    />
+  </div>
+</app-table-card>

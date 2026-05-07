@@ -1,0 +1,81 @@
+<!-- Grand Total Summary -->
+@if (grandTotal; as gt) {
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+    <mat-card class="card-sm">
+      <mat-card-content class="pt-3">
+        <p class="text-xs text-gray-500">Partners</p>
+        <p class="text-2xl font-bold">{{ gt.totalPartners }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="card-sm">
+      <mat-card-content class="pt-3">
+        <p class="text-xs text-gray-500">Total Bookings</p>
+        <p class="text-2xl font-bold">{{ gt.totalBookingsOrOperations }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="card-sm">
+      <mat-card-content class="pt-3">
+        <p class="text-xs text-gray-500">Total Pax</p>
+        <p class="text-2xl font-bold">{{ gt.totalPax }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="card-sm bg-red-50">
+      <mat-card-content class="pt-3">
+        <p class="text-xs text-gray-500">Total Debt</p>
+        <p class="text-xl font-bold text-red-600">{{ gt.totalDebtOrOwed | vndCurrency }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+}
+
+<app-table-card>
+  <ng-container actions>
+    <form [formGroup]="filtersForm" class="grid grid-cols-[1fr_auto] sm:flex sm:flex-wrap sm:justify-end gap-3 items-end w-full">
+      <!-- Search — full width on mobile, auto on sm+ -->
+      <div class="col-span-2 sm:flex-1 md:max-w-64">
+        <app-search-bar placeholder="Search agency..." (searchChange)="onSearchChange($event)" />
+      </div>
+
+      <!-- Payment Status filter -->
+      <mat-form-field class="form-field-sm sm:w-44" subscriptSizing="dynamic" appearance="outline">
+        <mat-label>Payment Status</mat-label>
+        <mat-select
+          formControlName="paymentStatus"
+          (selectionChange)="onPaymentStatusChange($event.value)"
+        >
+          <mat-option value="">All</mat-option>
+          <mat-option [value]="PaymentStatus.PENDING">Pending</mat-option>
+          <mat-option [value]="PaymentStatus.PARTIAL">Partial</mat-option>
+          <mat-option [value]="PaymentStatus.COMPLETED">Completed</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Refresh button -->
+      <button matButton="outlined" class="btn-rounded-xl sm:w-auto" (click)="onRefresh()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </form>
+  </ng-container>
+  <div table>
+    <app-data-table
+      [dataSource]="dataSource"
+      [columns]="columns()"
+      [actions]="actions"
+      [paginated]="false"
+      [footerConfig]="footerConfig()"
+      [mobileCardViewMode]="true"
+      [mobileCardHeaderKeys]="['agency', 'allPaid']"
+      [mobileCollapsedColumns]="3"
+      emptyStateIcon="account_balance_wallet"
+      emptyStateTitle="No agency debts"
+      emptyStateMessage="No debt records found for this period."
+      loadingMessage="Loading car booking debts..."
+      errorTitle="Failed to load car booking debts"
+    />
+  </div>
+</app-table-card>
+
+<ng-template #currencyTemplate let-value="value">
+  <span class="whitespace-nowrap">{{ value | vndCurrency }}</span>
+</ng-template>

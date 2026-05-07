@@ -1,0 +1,194 @@
+<app-dialog>
+  <app-dialog-header [title]="'Car Booking Debt'">
+    <button
+      ngProjectAs="app-dialog-header-right"
+      matButton="filled"
+      class="btn-rounded-xl"
+      [disabled]="exportLoading() || loading()"
+      (click)="exportToExcel()"
+      title="Export to Excel"
+    >
+      Export
+      <mat-icon>download</mat-icon>
+    </button>
+  </app-dialog-header>
+  <app-dialog-content>
+    <div class="w-full h-full overflow-auto p-4">
+      @if (loading()) {
+        <div class="flex items-center justify-center h-64">
+          <app-loading-spinner />
+        </div>
+      } @else if (error()) {
+        <div class="p-4">
+          <app-error-state [message]="error()!" />
+        </div>
+      } @else if (data(); as report) {
+        <div class="mx-auto space-y-6">
+          <!-- Period Information -->
+          <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium text-blue-900">Report Period:</span>
+              <span class="text-sm text-blue-700">{{ report.month }}/{{ report.year }}</span>
+            </div>
+          </div>
+
+          <!-- Summary Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600">Total Bookings</p>
+                  <p class="text-2xl font-bold text-gray-900 mt-1">
+                    {{ report.agency.summary.totalBookings }}
+                  </p>
+                </div>
+                <mat-icon class="text-blue-500 text-4xl">directions_car</mat-icon>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600">Total Guests</p>
+                  <p class="text-2xl font-bold text-gray-900 mt-1">
+                    {{ report.agency.summary.totalGuests }}
+                  </p>
+                </div>
+                <mat-icon class="text-purple-500 text-4xl">groups</mat-icon>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600">Total Selling Price</p>
+                  <p class="text-2xl font-bold text-gray-900 mt-1">
+                    {{ report.agency.summary.totalSellingPrice | vndCurrency }}
+                  </p>
+                </div>
+                <mat-icon class="text-green-500 text-4xl">payments</mat-icon>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-4 border-l-4 border-red-500">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-600">Total Debt</p>
+                  <p class="text-2xl font-bold text-red-600 mt-1">
+                    {{ report.agency.summary.totalDebt | vndCurrency }}
+                  </p>
+                </div>
+                <mat-icon class="text-red-500 text-4xl">account_balance</mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agency Information -->
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <mat-icon class="text-blue-600">business</mat-icon>
+                Agency Information
+              </h3>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  Agency Name
+                </label>
+                <p class="mt-1 text-base text-gray-900 font-medium">
+                  {{ report.agency.agency.name }}
+                </p>
+              </div>
+              <div>
+                <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  Phone
+                </label>
+                <p class="mt-1 text-base text-gray-900">
+                  {{ report.agency.agency.tel || 'N/A' }}
+                </p>
+              </div>
+              @if (report.agency.agency.address) {
+                <div class="md:col-span-2">
+                  <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    Address
+                  </label>
+                  <p class="mt-1 text-base text-gray-900">{{ report.agency.agency.address }}</p>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Financial Summary -->
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <mat-icon class="text-blue-600">analytics</mat-icon>
+                Financial Summary
+              </h3>
+            </div>
+            <div class="p-6 space-y-4">
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-sm font-medium text-gray-600">Total Selling Price</span>
+                <span class="text-base font-semibold text-gray-900">
+                  {{ report.agency.summary.totalSellingPrice | vndCurrency }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-sm font-medium text-gray-600">Total Receiving Price</span>
+                <span class="text-base font-semibold text-gray-900">
+                  {{ report.agency.summary.totalReceivingPrice | vndCurrency }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center py-3 bg-red-50 px-4 rounded-lg">
+                <span class="text-base font-bold text-gray-900">Total Debt Amount</span>
+                <span class="text-xl font-bold text-red-600">
+                  {{ report.agency.summary.totalDebt | vndCurrency }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bookings Detail -->
+          <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <mat-icon class="text-blue-600">receipt_long</mat-icon>
+                Booking Details ({{ report.agency.bookings.length || 0 }})
+              </h3>
+              <button
+                matButton="filled"
+                class="btn-rounded-xl"
+                [disabled]="!hasSelection()"
+                (click)="onMarkAsPaid()"
+                title="Mark selected bookings as paid"
+              >
+                <mat-icon>check_circle</mat-icon>
+                Mark as Paid
+                @if (selectedCount() > 0) {
+                  <span>({{ selectedCount() }})</span>
+                }
+              </button>
+            </div>
+            <div class="p-4">
+              <app-data-table
+                [dataSource]="dataSource"
+                [columns]="columns"
+                [selectable]="true"
+                [disableRowSelection]="isBookingPaid"
+                [stickyHeader]="true"
+                [paginated]="false"
+                emptyStateIcon="directions_car"
+                emptyStateTitle="No bookings found"
+                emptyStateMessage="There are no bookings for this period."
+                loadingMessage="Loading bookings..."
+                errorTitle="Failed to load bookings"
+              />
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </app-dialog-content>
+</app-dialog>
+
+<ng-template #currencyTemplate let-value="value">
+  <span class="whitespace-nowrap">{{ value | vndCurrency }}</span>
+</ng-template>

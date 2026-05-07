@@ -1,0 +1,80 @@
+<!-- Summary Card -->
+@if (summary(); as s) {
+  <mat-card class="mb-4 card-sm">
+    <mat-card-content>
+      <div class="flex flex-wrap gap-4 items-start">
+        <div class="flex-1">
+          <p class="text-sm text-gray-500 mb-1">Total Expenses — {{ s.month }}/{{ s.year }}</p>
+          <p class="text-2xl font-bold text-red-600">{{ s.totalAmount | vndCurrency }}</p>
+          <p class="text-xs text-gray-400 mt-0.5">{{ s.expenseCount }} record(s)</p>
+        </div>
+        <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+          @for (
+            cat of [
+              ExpenseCategory.GASOLINE,
+              ExpenseCategory.MAINTENANCE,
+              ExpenseCategory.INSURANCE,
+              ExpenseCategory.BANK,
+              ExpenseCategory.OTHER,
+            ];
+            track cat
+          ) {
+            <span class="text-gray-500">{{ CATEGORY_LABELS[cat] }}</span>
+            <span class="font-medium text-right">{{ getCategoryTotal(s, cat) | vndCurrency }}</span>
+          }
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+}
+
+<app-table-card title="">
+  <ng-container actions>
+    <form [formGroup]="filtersForm" class="grid grid-cols-[1fr_auto] sm:flex sm:flex-wrap sm:justify-end gap-3 items-end w-full">
+      <!-- Search — full width on mobile (spans 2 cols), auto on sm+ -->
+      <div class="col-span-2 sm:flex-1 sm:order-none md:max-w-64">
+        <app-search-bar placeholder="Search expenses..." (searchChange)="onSearchChange($event)" />
+      </div>
+
+      <!-- Category filter -->
+      <mat-form-field class="form-field-sm sm:w-40" subscriptSizing="dynamic" appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category" (selectionChange)="onCategoryChange($event.value)">
+          <mat-option [value]="ExpenseCategoryFilter.All">All</mat-option>
+          <mat-option [value]="ExpenseCategoryFilter.Gasoline">Gasoline</mat-option>
+          <mat-option [value]="ExpenseCategoryFilter.Maintenance">Maintenance</mat-option>
+          <mat-option [value]="ExpenseCategoryFilter.Insurance">Insurance</mat-option>
+          <mat-option [value]="ExpenseCategoryFilter.Bank">Bank</mat-option>
+          <mat-option [value]="ExpenseCategoryFilter.Other">Other</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Add button -->
+      <button matButton="filled" class="btn-rounded-xl sm:w-auto" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Add Expense
+      </button>
+    </form>
+  </ng-container>
+
+  <div table>
+    <app-data-table
+      [dataSource]="dataSource"
+      [columns]="columns"
+      [actions]="actions"
+      [stickyActions]="true"
+      [stickyHeader]="true"
+      [paginated]="false"
+      [mobileCardViewMode]="true"
+      [mobileCardHeaderKeys]="['title', 'category']"
+      [mobileCollapsedColumns]="3"
+      emptyStateIcon="receipt"
+      emptyStateTitle="No expenses found"
+      emptyStateMessage="Get started by adding your first expense."
+      emptyStateActionLabel="Add Expense"
+      loadingMessage="Loading expenses..."
+      errorTitle="Failed to load expenses"
+      (emptyStateAction)="openCreateDialog()"
+    />
+  </div>
+</app-table-card>

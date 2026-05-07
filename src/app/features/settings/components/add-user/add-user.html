@@ -1,0 +1,66 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Add New User</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 mt-4">
+      <!-- Email -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        @if (getErrorMessage('email')) {
+          <mat-error>{{ getErrorMessage('email') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Full Name -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Full Name</mat-label>
+        <input matInput type="text" formControlName="fullName" />
+        @if (getErrorMessage('fullName')) {
+          <mat-error>{{ getErrorMessage('fullName') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Role -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          @for (role of roles; track role.value) {
+            <mat-option [value]="role.value">{{ role.label }}</mat-option>
+          }
+        </mat-select>
+        @if (getErrorMessage('role')) {
+          <mat-error>{{ getErrorMessage('role') }}</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions class="flex justify-end gap-2 p-4">
+    <button
+      type="button"
+      class="btn-rounded-xl"
+      mat-button
+      (click)="form.reset({ role: 'user' })"
+      [disabled]="loading$ | async"
+    >
+      Reset
+    </button>
+    <button
+      type="submit"
+      class="btn-rounded-xl"
+      matButton="filled"
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="form.invalid || (loading$ | async)"
+    >
+      @if (loading$ | async) {
+        Creating...
+      } @else {
+        Create User
+      }
+    </button>
+  </mat-card-actions>
+</mat-card>

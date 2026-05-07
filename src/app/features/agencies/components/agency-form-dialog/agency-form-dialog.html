@@ -1,0 +1,64 @@
+<app-dialog>
+  <app-dialog-header [title]="dialogTitle" />
+
+  <app-dialog-content>
+    <form [formGroup]="agencyForm" class="flex flex-col gap-4">
+      <!-- Name Field -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Agency Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter agency name" required />
+        @if (agencyForm.controls.name.touched && agencyForm.controls.name.hasError('required')) {
+          <mat-error>Agency name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Phone Field -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="tel" placeholder="Enter phone number" />
+        @if (agencyForm.controls.tel.touched && agencyForm.controls.tel.hasError('required')) {
+          <mat-error>Phone number is required</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Address Field -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Address</mat-label>
+        <textarea
+          matInput
+          formControlName="address"
+          placeholder="Enter address"
+          rows="3"
+        ></textarea>
+        @if (
+          agencyForm.controls.address.touched && agencyForm.controls.address.hasError('required')
+        ) {
+          <mat-error>Address is required</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Note Field -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Note</mat-label>
+        <textarea
+          matInput
+          formControlName="note"
+          placeholder="Enter note (optional)"
+          rows="3"
+        ></textarea>
+      </mat-form-field>
+    </form>
+  </app-dialog-content>
+
+  <app-dialog-actions>
+    <button matButton="text" class="btn-rounded-xl btn-neutral" (click)="onCancel()">Cancel</button>
+    <button
+      matButton="filled"
+      (click)="onSubmit()"
+      class="btn-rounded-xl"
+      [disabled]="!agencyForm.valid"
+    >
+      {{ isEditMode ? 'Update' : 'Create' }}
+    </button>
+  </app-dialog-actions>
+</app-dialog>

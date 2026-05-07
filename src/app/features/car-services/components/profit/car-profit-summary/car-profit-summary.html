@@ -1,0 +1,290 @@
+<!-- Loading State -->
+@if (loading()) {
+  <div class="flex items-center justify-center h-96">
+    <mat-spinner diameter="48" />
+  </div>
+}
+
+<!-- Error State -->
+@if (error() && !loading()) {
+  <div class="flex flex-col items-center justify-center h-96 space-y-4">
+    <mat-icon class="text-red-500" style="font-size: 48px; width: 48px; height: 48px">
+      error_outline
+    </mat-icon>
+    <p class="text-gray-700 text-lg">{{ error() }}</p>
+    <button
+      type="button"
+      class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+      (click)="refresh()"
+    >
+      Retry
+    </button>
+  </div>
+}
+
+<!-- Content -->
+@if (summary() && !loading() && !error()) {
+  <div class="space-y-6">
+    <!-- Booking Financials Card -->
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="flex items-start justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Booking Financials</h3>
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+            BOOKINGS
+          </span>
+        </div>
+
+        <!-- Revenue -->
+        <div class="mb-6">
+          <p class="text-sm text-gray-500 mb-1">Gross Revenue</p>
+          <p class="text-4xl font-bold text-blue-600">
+            {{ bookingFinancials()?.grossRevenue | vndCurrency }}
+          </p>
+
+          @if (bookingFinancials()?.transferDeductions) {
+            <div class="flex items-center justify-between mt-3 p-2 bg-red-50 rounded-lg">
+              <div class="flex items-center gap-2">
+                <mat-icon class="text-red-400" style="font-size: 18px; width: 18px; height: 18px">
+                  swap_horiz
+                </mat-icon>
+                <span class="text-sm text-gray-600">Transfer Deductions</span>
+              </div>
+              <span class="text-sm font-semibold text-red-600">
+                -{{ bookingFinancials()?.transferDeductions | vndCurrency }}
+              </span>
+            </div>
+
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-200">
+              <span class="text-sm font-semibold text-gray-600">Net Revenue</span>
+              <span class="text-lg font-bold text-blue-600">
+                {{ bookingFinancials()?.revenue | vndCurrency }}
+              </span>
+            </div>
+          }
+        </div>
+
+        <!-- Booking Stats -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <p class="text-sm text-gray-500 mb-1">Bookings</p>
+            <p class="text-xl font-bold text-gray-900">{{ bookingFinancials()?.bookingCount }}</p>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <p class="text-sm text-gray-500 mb-1">Guests</p>
+            <p class="text-xl font-bold text-gray-900">{{ bookingFinancials()?.guestCount }}</p>
+          </div>
+        </div>
+
+        <!-- Net Profit -->
+        <div
+          class="flex items-center justify-between p-4 rounded-lg"
+          [class]="isBookingProfit() ? 'bg-green-50' : 'bg-red-50'"
+        >
+          <div class="flex items-center gap-2">
+            <mat-icon [class]="isBookingProfit() ? 'text-green-500' : 'text-red-500'">
+              {{ isBookingProfit() ? 'trending_up' : 'trending_down' }}
+            </mat-icon>
+            <span class="font-semibold text-gray-700">Net Profit</span>
+          </div>
+          <p
+            class="text-xl font-bold"
+            [class]="isBookingProfit() ? 'text-green-600' : 'text-red-600'"
+          >
+            {{ bookingFinancials()?.netProfit | vndCurrency }}
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Transfer Financials Card -->
+    @if (hasTransfers()) {
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="flex items-start justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-900">Transfer Financials</h3>
+            <span
+              class="px-3 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-700"
+            >
+              {{ transferFinancials()?.transferCount }} TRANSFERS
+            </span>
+          </div>
+
+          <!-- Summary Grid -->
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="p-4 bg-gray-50 rounded-lg">
+              <p class="text-sm text-gray-500 mb-1">Original Price</p>
+              <p class="text-xl font-bold text-gray-900">
+                {{ transferFinancials()?.totalOriginalSellingPrice | vndCurrency }}
+              </p>
+            </div>
+            <div class="p-4 bg-orange-50 rounded-lg">
+              <p class="text-sm text-gray-500 mb-1">Compensation Paid</p>
+              <p class="text-xl font-bold text-orange-600">
+                {{ transferFinancials()?.totalCompensationAmount | vndCurrency }}
+              </p>
+            </div>
+            <div class="p-4 bg-red-50 rounded-lg">
+              <p class="text-sm text-gray-500 mb-1">Net Transfer Cost</p>
+              <p class="text-xl font-bold text-red-600">
+                {{ transferFinancials()?.netTransferCost | vndCurrency }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Transfer Details Table -->
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Booking Code
+                  </th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Partner Agency
+                  </th>
+                  <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    Original Price
+                  </th>
+                  <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    Compensation
+                  </th>
+                  <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    Net Cost
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                @for (
+                  transfer of transferFinancials()?.transfers;
+                  track transfer.originalBookingCode
+                ) {
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3 text-sm text-gray-900">
+                      {{ transfer.originalBookingCode }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-700">
+                      {{ transfer.partnerAgencyName }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-right text-gray-900">
+                      {{ transfer.originalSellingPrice | vndCurrency }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-right text-orange-600">
+                      {{ transfer.compensationAmount | vndCurrency }}
+                    </td>
+                    <td
+                      class="px-4 py-3 text-sm text-right font-semibold"
+                      [class]="transfer.netCost > 0 ? 'text-red-600' : 'text-green-600'"
+                    >
+                      {{ transfer.netCost > 0 ? '+' : '' }}{{ transfer.netCost | vndCurrency }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Fleet Expenses Card -->
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="flex items-start justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Fleet Expenses</h3>
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-700">
+            EXPENSES
+          </span>
+        </div>
+
+        <div class="space-y-2 mb-4">
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <mat-icon class="text-orange-500">local_gas_station</mat-icon>
+              <span class="text-gray-700">Gasoline</span>
+            </div>
+            <span class="font-semibold text-gray-900">
+              {{ expenseFinancials()?.byCategory?.gasoline | vndCurrency }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <mat-icon class="text-blue-500">build</mat-icon>
+              <span class="text-gray-700">Maintenance</span>
+            </div>
+            <span class="font-semibold text-gray-900">
+              {{ expenseFinancials()?.byCategory?.maintenance | vndCurrency }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <mat-icon class="text-green-500">shield</mat-icon>
+              <span class="text-gray-700">Insurance</span>
+            </div>
+            <span class="font-semibold text-gray-900">
+              {{ expenseFinancials()?.byCategory?.insurance | vndCurrency }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <mat-icon class="text-indigo-500">account_balance</mat-icon>
+              <span class="text-gray-700">Bank</span>
+            </div>
+            <span class="font-semibold text-gray-900">
+              {{ expenseFinancials()?.byCategory?.bank | vndCurrency }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-2">
+              <mat-icon class="text-gray-500">miscellaneous_services</mat-icon>
+              <span class="text-gray-700">Other</span>
+            </div>
+            <span class="font-semibold text-gray-900">
+              {{ expenseFinancials()?.byCategory?.other | vndCurrency }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+          <p class="text-sm font-semibold text-gray-600">
+            Total Expenses ({{ expenseFinancials()?.expenseCount }} items)
+          </p>
+          <p class="text-lg font-bold text-gray-900">
+            {{ expenseFinancials()?.total | vndCurrency }}
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Total Profit Card -->
+    <mat-card
+      appearance="outlined"
+      [class]="isTotalProfit() ? 'border-green-500 border-2' : 'border-red-500 border-2'"
+    >
+      <mat-card-content>
+        <div class="text-center py-4">
+          <div class="flex items-center justify-center gap-2 mb-2">
+            <mat-icon
+              [class]="isTotalProfit() ? 'text-green-500' : 'text-red-500'"
+              style="font-size: 32px; width: 32px; height: 32px"
+            >
+              {{ isTotalProfit() ? 'trending_up' : 'trending_down' }}
+            </mat-icon>
+            <p class="text-lg font-semibold text-gray-700">Total Monthly Profit</p>
+          </div>
+          <p class="text-xs text-gray-500 mb-3">Booking Net Profit − Fleet Expenses</p>
+          <p
+            class="text-5xl font-bold"
+            [class]="isTotalProfit() ? 'text-green-600' : 'text-red-600'"
+          >
+            {{ totalProfit() >= 0 ? '+' : '' }}{{ totalProfit() | vndCurrency }}
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

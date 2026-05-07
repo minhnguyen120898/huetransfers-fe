@@ -1,0 +1,44 @@
+<app-table-card title="">
+  <ng-container actions>
+    <form [formGroup]="filtersForm" class="flex gap-4 items-end justify-end w-full">
+      <div class="flex-1 max-w-40 md:max-w-80">
+        <app-search-bar placeholder="Search agencies..." (searchChange)="onSearchChange($event)" />
+      </div>
+
+      <div class="hidden md:block">
+        <mat-form-field appearance="outline" class="w-48 form-field-sm" subscriptSizing="dynamic">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="isActive">
+            <mat-option [value]="AgencyStatusFilter.All">All</mat-option>
+            <mat-option [value]="AgencyStatusFilter.Active">Active</mat-option>
+            <mat-option [value]="AgencyStatusFilter.Inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <button matButton="filled" class="btn-rounded-xl" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Add Agency
+      </button>
+    </form>
+  </ng-container>
+
+  <div table>
+    <app-data-table
+      [dataSource]="dataSource"
+      [columns]="columns"
+      [actions]="actions"
+      [paginated]="true"
+      [mobileCardViewMode]="true"
+      [mobileCardHeaderKeys]="['name', 'isActive']"
+      [mobileCollapsedColumns]="3"
+      emptyStateIcon="business"
+      emptyStateTitle="No agencies found"
+      emptyStateMessage="Get started by adding your first travel agency partner."
+      emptyStateActionLabel="Add Agency"
+      loadingMessage="Loading agencies..."
+      errorTitle="Failed to load agencies"
+      (emptyStateAction)="openCreateDialog()"
+    />
+  </div>
+</app-table-card>

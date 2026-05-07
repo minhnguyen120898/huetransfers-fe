@@ -1,0 +1,57 @@
+<app-dialog>
+  <app-dialog-header [title]="dialogTitle"></app-dialog-header>
+
+  <app-dialog-content>
+    <form [formGroup]="form" class="flex flex-col gap-4 mt-2">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+          <mat-error>Email is required</mat-error>
+        } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
+          <mat-error>Invalid email format</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Full Name</mat-label>
+        <input matInput type="text" formControlName="fullName" />
+        @if (form.controls.fullName.touched && form.controls.fullName.hasError('required')) {
+          <mat-error>Full name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option [value]="UserRole.USER">User</mat-option>
+          <mat-option [value]="UserRole.ADMIN">Admin</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Telephone</mat-label>
+        <input matInput type="text" formControlName="tel" />
+      </mat-form-field>
+
+      @if (isEditMode) {
+        <p class="text-sm text-gray-500">Email and role cannot be changed after creation.</p>
+      } @else {
+        <p class="text-sm text-gray-500">A temporary password will be emailed to the user.</p>
+      }
+    </form>
+  </app-dialog-content>
+
+  <app-dialog-actions>
+    <button mat-button class="btn-rounded-xl" (click)="onCancel()">Cancel</button>
+    <button
+      matButton="filled"
+      class="btn-rounded-xl"
+      color="primary"
+      [disabled]="form.invalid"
+      (click)="onSubmit()"
+    >
+      {{ isEditMode ? 'Save Changes' : 'Create User' }}
+    </button>
+  </app-dialog-actions>
+</app-dialog>

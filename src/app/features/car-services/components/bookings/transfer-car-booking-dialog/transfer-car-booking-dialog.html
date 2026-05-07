@@ -1,0 +1,122 @@
+<app-dialog>
+  <app-dialog-header title="Transfer Car Booking to Partner" (closed)="onCancel()" />
+
+  <app-dialog-content>
+    <form [formGroup]="transferForm" class="space-y-6">
+      <!-- Booking Information -->
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h4 class="text-sm font-semibold text-blue-900 mb-3">Booking Information</h4>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <span class="text-gray-600">Booking Code:</span>
+            <span class="ml-2 font-medium">{{ data.booking.bookingCode }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">Guest:</span>
+            <span class="ml-2 font-medium">{{ data.booking.guestName }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">Selling Price:</span>
+            <span class="ml-2 font-medium">{{ data.booking.sellingPrice | vndCurrency }}</span>
+          </div>
+          <div>
+            <span class="text-gray-600">Receiving Price:</span>
+            <span class="ml-2 font-medium">{{ data.booking.receivingPrice | vndCurrency }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partner Agency -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Select Partner Agency</mat-label>
+        <mat-select formControlName="partnerAgencyId">
+          <mat-option value="">-- Select Agency --</mat-option>
+          @for (agency of availablePartners(); track agency.id) {
+            <mat-option [value]="agency.id">
+              {{ agency.name }}
+              @if (agency.tel) {
+                <span class="text-gray-500 text-sm"> ({{ agency.tel }}) </span>
+              }
+            </mat-option>
+          }
+        </mat-select>
+        @if (
+          transferForm.controls.partnerAgencyId.touched &&
+          transferForm.controls.partnerAgencyId.hasError('required')
+        ) {
+          <mat-error>Partner agency is required</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Reason -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Transfer Reason</mat-label>
+        <textarea
+          matInput
+          formControlName="reason"
+          rows="3"
+          placeholder="Reason for transfer (min. 5 characters)"
+        ></textarea>
+        @if (
+          transferForm.controls.reason.touched && transferForm.controls.reason.hasError('required')
+        ) {
+          <mat-error>Reason is required</mat-error>
+        }
+        @if (
+          transferForm.controls.reason.touched && transferForm.controls.reason.hasError('minlength')
+        ) {
+          <mat-error>Reason must be at least 5 characters</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Compensation Amount -->
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-full">
+        <mat-label>Compensation Amount (Optional)</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="compensationAmount"
+          vndCurrencyFormat
+          placeholder="Defaults to selling price"
+        />
+        <span matTextSuffix class="whitespace-nowrap">x1000₫</span>
+        <mat-hint>Leave empty to use selling price as compensation</mat-hint>
+        @if (transferForm.controls.compensationAmount.hasError('min')) {
+          <mat-error>Compensation cannot be negative</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Financial Summary -->
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <h4 class="text-sm font-semibold text-gray-900 mb-3">Financial Summary</h4>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Compensation to partner:</span>
+            <span class="font-medium">{{ compensationAmountSignal() | vndCurrency }}</span>
+          </div>
+          @if (data.booking.receivingPrice > 0) {
+            <div class="flex justify-between">
+              <span class="text-gray-600">We already collected:</span>
+              <span class="font-medium">{{ data.booking.receivingPrice | vndCurrency }}</span>
+            </div>
+            <div class="border-t border-gray-300 pt-2 mt-2"></div>
+            <div class="flex justify-between">
+              <span class="text-gray-900 font-semibold">Net we owe partner:</span>
+              <span class="font-bold text-green-600">
+                {{ netCompensation() | vndCurrency }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    </form>
+  </app-dialog-content>
+
+  <app-dialog-actions>
+    <button matButton="text" class="btn-rounded-xl btn-neutral" (click)="onCancel()">Cancel</button>
+    <button matButton="filled" class="btn-rounded-xl" (click)="onSubmit()">
+      <mat-icon>swap_horiz</mat-icon>
+      Transfer Booking
+    </button>
+  </app-dialog-actions>
+</app-dialog>
