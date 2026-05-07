@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MonthPickerComponent, TourSelectorComponent } from '@shared/components';
+import { MonthPickerComponent } from '@shared/components';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,7 +11,6 @@ import { MonthPickerComponent, TourSelectorComponent } from '@shared/components'
     CommonModule,
     MatIconModule,
     MonthPickerComponent,
-    TourSelectorComponent,
     MatButtonModule,
     OverlayModule,
   ],

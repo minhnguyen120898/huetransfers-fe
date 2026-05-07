@@ -1,4 +1,4 @@
-import { TransportType } from '@features/operations';
+import { TransportType } from './car-booking.model';
 import { TimeOption, TourGroupType } from './booking.model';
 
 /**

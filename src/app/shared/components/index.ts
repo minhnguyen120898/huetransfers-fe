@@ -12,7 +12,6 @@ export * from './table-card';
 export * from './table-header';
 export * from './dialog';
 export * from './month-picker/month-picker';
-export * from './tour-selector/tour-selector';
 export * from './agency-autocomplete/agency-autocomplete';
 export * from './right-side-sheet/right-side-sheet.service';
 export * from './right-side-sheet/right-side-sheet-container';
