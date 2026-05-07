@@ -4,7 +4,7 @@ import { authGuard, guestGuard, forceChangePasswordGuard, adminGuard } from '@fe
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/tours',
+    redirectTo: '/car-services',
     pathMatch: 'full',
   },
   {
@@ -46,57 +46,13 @@ export const routes: Routes = [
     canActivate: [authGuard, forceChangePasswordGuard],
     loadComponent: () => import('./layout/layout-shell').then((m) => m.LayoutShell),
     children: [
-      // {
-      //   path: 'dashboard',
-      //   loadComponent: () =>
-      //     import('./features/dashboard/dashboard').then((m) => m.DashboardComponent),
-      // },
-      {
-        path: 'tours',
-        loadComponent: () => import('./features/tours').then((m) => m.TourListComponent),
-      },
       {
         path: 'travel-agencies',
         loadComponent: () => import('./features/agencies').then((m) => m.AgencyListComponent),
       },
       {
-        path: 'guides',
-        loadComponent: () => import('./features/guides').then((m) => m.GuideListComponent),
-      },
-      {
-        path: 'restaurants',
-        loadComponent: () =>
-          import('./features/restaurants').then((m) => m.RestaurantListComponent),
-      },
-      {
-        path: 'transport-providers',
-        loadComponent: () =>
-          import('./features/transport-providers').then((m) => m.TransportProviderListComponent),
-      },
-      {
-        path: 'bookings',
-        loadComponent: () =>
-          import('./features/bookings/components/booking-tab/booking-tab').then(
-            (m) => m.BookingTab,
-          ),
-      },
-      {
-        path: 'debt',
-        loadComponent: () =>
-          import('./features/debt/components/debt-tab/debt-tab').then((m) => m.DebtTab),
-      },
-      {
         path: 'settings',
         loadComponent: () => import('./features/settings').then((m) => m.SettingsPageComponent),
-      },
-      {
-        path: 'monthly-transactions',
-        loadComponent: () =>
-          import('./features/monthly-transaction').then((m) => m.MonthlyTransactionListComponent),
-      },
-      {
-        path: 'profit',
-        loadComponent: () => import('./features/profit').then((m) => m.ProfitSummary),
       },
       {
         path: 'car-services',
@@ -113,6 +69,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/tours',
+    redirectTo: '/car-services',
   },
 ];
