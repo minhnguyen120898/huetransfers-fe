@@ -2,7 +2,11 @@
   <ng-container actions>
     <form [formGroup]="filtersForm" class="flex flex-wrap gap-3 items-end justify-end w-full">
       <!-- Status filter -->
-      <mat-form-field class="w-[45%] sm:w-36 form-field-sm" subscriptSizing="dynamic" appearance="outline">
+      <mat-form-field
+        class="w-[45%] sm:w-36 form-field-sm"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
         <mat-label>Status</mat-label>
         <mat-select formControlName="status" (selectionChange)="onStatusChange($event.value)">
           <mat-option [value]="CarBookingStatusFilter.All">All</mat-option>
@@ -14,7 +18,11 @@
       </mat-form-field>
 
       <!-- Payment status filter -->
-      <mat-form-field class="w-[45%] sm:w-36 form-field-sm" subscriptSizing="dynamic" appearance="outline">
+      <mat-form-field
+        class="w-[45%] sm:w-36 form-field-sm"
+        subscriptSizing="dynamic"
+        appearance="outline"
+      >
         <mat-label>Payment</mat-label>
         <mat-select
           formControlName="paymentStatus"

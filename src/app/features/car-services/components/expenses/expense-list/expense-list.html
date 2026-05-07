@@ -30,7 +30,10 @@
 
 <app-table-card title="">
   <ng-container actions>
-    <form [formGroup]="filtersForm" class="grid grid-cols-[1fr_auto] sm:flex sm:flex-wrap sm:justify-end gap-3 items-end w-full">
+    <form
+      [formGroup]="filtersForm"
+      class="grid grid-cols-[1fr_auto] sm:flex sm:flex-wrap sm:justify-end gap-3 items-end w-full"
+    >
       <!-- Search — full width on mobile (spans 2 cols), auto on sm+ -->
       <div class="col-span-2 sm:flex-1 sm:order-none md:max-w-64">
         <app-search-bar placeholder="Search expenses..." (searchChange)="onSearchChange($event)" />

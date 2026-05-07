@@ -7,13 +7,7 @@ import { MonthPickerComponent } from '@shared/components';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MonthPickerComponent,
-    MatButtonModule,
-    OverlayModule,
-  ],
+  imports: [CommonModule, MatIconModule, MonthPickerComponent, MatButtonModule, OverlayModule],
   templateUrl: './sidebar.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

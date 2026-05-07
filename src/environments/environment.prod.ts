@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api2.hoianlandscapetravel.com',
+  apiUrl: 'https://api.huetransfers.net',
   apiPrefix: '/api/v1',
-  apiBaseUrl: 'https://api2.hoianlandscapetravel.com/api/v1',
-  swaggerUrl: 'https://api2.hoianlandscapetravel.com/docs',
+  apiBaseUrl: 'https://api.huetransfers.net/api/v1',
+  swaggerUrl: 'https://api.huetransfers.net/docs',
   apiTimeout: 30000,
   tokenRefreshThreshold: 300000, // 5 minutes before expiry
   tokenKey: 'access_token',
