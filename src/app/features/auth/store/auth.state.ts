@@ -108,8 +108,8 @@ export class AuthState {
           // Show success notification
           this.notification.showSuccess('Login successful!');
 
-          // Navigate to dashboard
-          this.router.navigate(['/dashboard']);
+          // Navigate to car-services (default landing page)
+          this.router.navigate(['/car-services']);
         }
       }),
       catchError((error) => {
@@ -324,8 +324,8 @@ export class AuthState {
         // Show success notification
         this.notification.showSuccess(response.message || 'Password changed successfully!');
 
-        // Navigate to dashboard
-        this.router.navigate(['/dashboard']);
+        // Navigate to car-services (default landing page)
+        this.router.navigate(['/car-services']);
       }),
       catchError((error) => {
         const errorMessage = error.error?.message || 'Failed to change password. Please try again.';

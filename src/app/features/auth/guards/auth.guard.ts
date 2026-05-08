@@ -40,8 +40,8 @@ export const guestGuard: CanActivateFn = () => {
     return true;
   }
 
-  // Redirect to dashboard if already authenticated
-  router.navigate(['/dashboard']);
+  // Redirect to car-services if already authenticated
+  router.navigate(['/car-services']);
   return false;
 };
 
@@ -60,8 +60,8 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
       return true;
     }
 
-    // Redirect to unauthorized page or dashboard
-    router.navigate(['/tours']);
+    // Redirect to travel-agencies (non-admin fallback)
+    router.navigate(['/travel-agencies']);
     return false;
   };
 };
