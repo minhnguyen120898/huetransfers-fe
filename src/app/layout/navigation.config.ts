@@ -16,7 +16,6 @@ export const NAVIGATION_ITEMS: MenuItemProps[] = [
     icon: 'directions_car',
     label: 'Car Services',
     route: '/car-services',
-    adminOnly: true,
   },
   {
     icon: 'settings',

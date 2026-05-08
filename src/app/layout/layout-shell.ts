@@ -18,13 +18,6 @@ export class LayoutShell {
   private isAdmin = this.user?.role === UserRole.ADMIN;
 
   constructor() {
-    this.navigationItems = NAVIGATION_ITEMS.filter((item) => !item.adminOnly || this.isAdmin).map(
-      (item) => {
-        if (item.route?.includes('/car-services') && this.isAdmin) {
-          return { ...item, hidden: false };
-        }
-        return item;
-      },
-    );
+    this.navigationItems = NAVIGATION_ITEMS.filter((item) => !item.adminOnly || this.isAdmin);
   }
 }

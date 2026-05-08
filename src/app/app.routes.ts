@@ -56,7 +56,6 @@ export const routes: Routes = [
       },
       {
         path: 'car-services',
-        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/car-services/car-services-tab').then((m) => m.CarServicesTab),
       },
