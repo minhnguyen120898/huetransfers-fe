@@ -301,6 +301,52 @@ export class CarBookingState {
     this.notification.showError('Failed to cancel car booking');
   }
 
+  // ─── Cancel Transfer ─────────────────────────────────────────────────────────
+
+  @Action(CarBookingActions.CancelTransfer)
+  cancelTransfer(
+    ctx: StateContext<CarBookingStateModel>,
+    action: CarBookingActions.CancelTransfer,
+  ) {
+    ctx.patchState({ loading: true, error: null });
+    return this.carBookingService.cancelTransfer(action.id).pipe(
+      tap((response) => {
+        ctx.dispatch(new CarBookingActions.CancelTransferSuccess(response));
+      }),
+      catchError((error) => {
+        ctx.dispatch(
+          new CarBookingActions.CancelTransferFailure(
+            error.message || 'Failed to cancel transfer',
+          ),
+        );
+        return of(error);
+      }),
+    );
+  }
+
+  @Action(CarBookingActions.CancelTransferSuccess)
+  cancelTransferSuccess(
+    ctx: StateContext<CarBookingStateModel>,
+    action: CarBookingActions.CancelTransferSuccess,
+  ) {
+    const { originalBooking } = action.response;
+    const carBookings = ctx.getState().carBookings.map((b) =>
+      b.id === originalBooking.id ? originalBooking : b,
+    );
+    ctx.patchState({ carBookings, loading: false, error: null });
+    this.notification.showSuccess('Transfer cancelled successfully');
+    this.refresh(ctx);
+  }
+
+  @Action(CarBookingActions.CancelTransferFailure)
+  cancelTransferFailure(
+    ctx: StateContext<CarBookingStateModel>,
+    action: CarBookingActions.CancelTransferFailure,
+  ) {
+    ctx.patchState({ loading: false, error: action.error });
+    this.notification.showError('Failed to cancel transfer');
+  }
+
   // ─── Bulk Payment Status ─────────────────────────────────────────────────────
 
   @Action(CarBookingActions.BulkUpdatePaymentStatus)
