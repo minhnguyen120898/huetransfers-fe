@@ -26,7 +26,7 @@ const TRANSPORT_TYPE_LABELS: Record<TransportType, string> = {
 
 const STATUS_COLOR_MAP: Record<CarBookingStatus, string> = {
   [CarBookingStatus.CONFIRMED]: 'blue-chip',
-  [CarBookingStatus.COMPLETED]: 'green-chip',
+  [CarBookingStatus.COMPLETED]: 'success-chip',
   [CarBookingStatus.CANCELLED]: 'error-chip',
   [CarBookingStatus.TRANSFERRED]: 'orange-chip',
 };
@@ -41,7 +41,7 @@ const STATUS_LABEL_MAP: Record<CarBookingStatus, string> = {
 const PAYMENT_STATUS_COLOR_MAP: Record<PaymentStatus, string> = {
   [PaymentStatus.PENDING]: 'error-chip',
   [PaymentStatus.PARTIAL]: 'orange-chip',
-  [PaymentStatus.COMPLETED]: 'green-chip',
+  [PaymentStatus.COMPLETED]: 'success-chip',
 };
 
 const PAYMENT_STATUS_LABEL_MAP: Record<PaymentStatus, string> = {

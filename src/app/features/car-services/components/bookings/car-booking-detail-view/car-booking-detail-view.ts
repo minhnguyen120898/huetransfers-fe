@@ -15,7 +15,7 @@ const TRANSPORT_LABELS: Record<TransportType, string> = {
 
 const STATUS_CLASS: Record<CarBookingStatus, string> = {
   [CarBookingStatus.CONFIRMED]: 'blue-chip',
-  [CarBookingStatus.COMPLETED]: 'green-chip',
+  [CarBookingStatus.COMPLETED]: 'success-chip',
   [CarBookingStatus.CANCELLED]: 'error-chip',
   [CarBookingStatus.TRANSFERRED]: 'orange-chip',
 };
