@@ -14,7 +14,8 @@ const isEditDisabled = (booking: CarBooking): boolean =>
   booking.status === CarBookingStatus.CANCELLED || booking.status === CarBookingStatus.TRANSFERRED;
 
 const isCancelDisabled = (booking: CarBooking): boolean =>
-  booking.status !== CarBookingStatus.CONFIRMED;
+  booking.status !== CarBookingStatus.CONFIRMED &&
+  booking.status !== CarBookingStatus.TRANSFERRED;
 
 const isTransferDisabled = (booking: CarBooking): boolean =>
   booking.status !== CarBookingStatus.CONFIRMED || booking.isTransfer;

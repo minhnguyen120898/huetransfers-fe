@@ -47,7 +47,7 @@ interface EditTransferPricingForm {
             subscriptSizing="dynamic"
             appearance="outline"
           >
-            <mat-label>Compensation Amount (×1000đ) *</mat-label>
+            <mat-label>Compensation Amount (×1000đ)</mat-label>
             <input
               matInput
               type="number"
