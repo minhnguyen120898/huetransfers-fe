@@ -9,6 +9,7 @@ import {
   CarBookingCountByStatus,
   CarBookingCountParams,
   CarBookingQueryParams,
+  CancelTransferResponse,
   CreateCarBookingDto,
   TransferCarBookingDto,
   TransferCarBookingResponse,
@@ -50,6 +51,10 @@ export class CarBookingService extends BaseHttpService {
 
   cancelCarBooking(id: string): Observable<CarBooking> {
     return this.delete<CarBooking>(`${this.endpoint}/${id}`);
+  }
+
+  cancelTransfer(id: string): Observable<CancelTransferResponse> {
+    return this.delete<CancelTransferResponse>(`${this.endpoint}/${id}/transfer`);
   }
 
   bulkUpdatePaymentStatus(dto: BulkPaymentStatusDto): Observable<BulkPaymentStatusResponse> {
