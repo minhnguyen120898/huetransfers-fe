@@ -219,12 +219,16 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
   }
 
   onCancel(booking: CarBooking): void {
+    const isTransfer = booking.status === CarBookingStatus.TRANSFERRED;
+
     const dialogRef = this.dialog.open(ConfirmDialog, {
       width: '400px',
       data: {
-        title: 'Cancel Car Booking',
-        message: `Are you sure you want to cancel booking "${booking.bookingCode}"?`,
-        confirmText: 'Cancel Booking',
+        title: isTransfer ? 'Cancel Transfer' : 'Cancel Car Booking',
+        message: isTransfer
+          ? `Are you sure you want to cancel the transfer for booking "${booking.bookingCode}"? This will cancel both the original and the compensation booking.`
+          : `Are you sure you want to cancel booking "${booking.bookingCode}"?`,
+        confirmText: isTransfer ? 'Cancel Transfer' : 'Cancel Booking',
         cancelText: 'Close',
         confirmColor: 'warn',
       },
@@ -232,7 +236,11 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
 
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.dataSource.cancelCarBooking(booking.id);
+        if (isTransfer) {
+          this.store.dispatch(new CarBookingActions.CancelTransfer(booking.id));
+        } else {
+          this.dataSource.cancelCarBooking(booking.id);
+        }
       }
     });
   }
