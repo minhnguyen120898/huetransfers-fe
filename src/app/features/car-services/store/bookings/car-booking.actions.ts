@@ -5,6 +5,7 @@ import {
   CarBookingCountByStatus,
   CarBookingCountParams,
   CarBookingQueryParams,
+  CancelTransferResponse,
   CreateCarBookingDto,
   TransferCarBookingDto,
   TransferCarBookingResponse,
@@ -92,6 +93,21 @@ export namespace CarBookingActions {
 
   export class CancelCarBookingFailure {
     static readonly type = '[CarBooking] Cancel Car Booking Failure';
+    constructor(public error: string) {}
+  }
+
+  export class CancelTransfer {
+    static readonly type = '[CarBooking] Cancel Transfer';
+    constructor(public id: string) {}
+  }
+
+  export class CancelTransferSuccess {
+    static readonly type = '[CarBooking] Cancel Transfer Success';
+    constructor(public response: CancelTransferResponse) {}
+  }
+
+  export class CancelTransferFailure {
+    static readonly type = '[CarBooking] Cancel Transfer Failure';
     constructor(public error: string) {}
   }
 
