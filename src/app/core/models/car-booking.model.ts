@@ -143,6 +143,11 @@ export interface TransferCarBookingResponse {
   transferBooking: CarBooking;
 }
 
+export interface CancelTransferResponse {
+  originalBooking: CarBooking;
+  compensationBooking: CarBooking;
+}
+
 export interface UpdateCarBookingTransferPricingDto {
   compensationAmount: number;
   reason?: string;
