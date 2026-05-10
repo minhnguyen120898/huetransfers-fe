@@ -315,9 +315,7 @@ export class CarBookingState {
       }),
       catchError((error) => {
         ctx.dispatch(
-          new CarBookingActions.CancelTransferFailure(
-            error.message || 'Failed to cancel transfer',
-          ),
+          new CarBookingActions.CancelTransferFailure(error.message || 'Failed to cancel transfer'),
         );
         return of(error);
       }),
@@ -330,9 +328,9 @@ export class CarBookingState {
     action: CarBookingActions.CancelTransferSuccess,
   ) {
     const { originalBooking } = action.response;
-    const carBookings = ctx.getState().carBookings.map((b) =>
-      b.id === originalBooking.id ? originalBooking : b,
-    );
+    const carBookings = ctx
+      .getState()
+      .carBookings.map((b) => (b.id === originalBooking.id ? originalBooking : b));
     ctx.patchState({ carBookings, loading: false, error: null });
     this.notification.showSuccess('Transfer cancelled successfully');
     this.refresh(ctx);

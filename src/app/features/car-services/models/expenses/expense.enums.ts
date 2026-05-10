@@ -4,6 +4,7 @@ export enum ExpenseColumnKey {
   Amount = 'amount',
   Period = 'period',
   Note = 'note',
+  UpdatedAt = 'updatedAt',
   Actions = 'actions',
 }
 

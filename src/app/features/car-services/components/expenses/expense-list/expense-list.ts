@@ -37,6 +37,7 @@ import { ExpenseDataService } from '../../../services/expenses/expense-data.serv
 import { NgxsExpenseDataService } from '../../../services/expenses/ngxs-expense-data.service';
 import { ExpenseTableDataSource } from '../../../services/expenses/expense-table-datasource';
 import { ExpenseFormDialog } from '../expense-form-dialog/expense-form-dialog';
+import { formatDateTime } from '@core/config';
 import {
   ExpenseColumnKey,
   ExpenseActionId,
@@ -137,6 +138,14 @@ export class ExpenseList implements OnInit {
       accessor: (row) => row.note || '—',
       type: 'text',
       width: '200px',
+    },
+    {
+      key: ExpenseColumnKey.UpdatedAt,
+      header: 'Updated date',
+      accessor: (row) => formatDateTime(new Date(row.updatedAt)),
+      type: 'text',
+      align: 'center',
+      width: '160px',
     },
   ];
 
