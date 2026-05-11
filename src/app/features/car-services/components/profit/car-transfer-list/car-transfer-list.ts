@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, inject, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, effect, ViewChild, AfterViewInit, TemplateRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { select } from '@ngxs/store';
 import { MonthFilterState } from '@core/store/month-filter';
 import { DataTable } from '@shared/components/data-table/data-table';
@@ -13,7 +14,7 @@ import { getCarTransferTableColumns } from '../../../configs/car-transfer-table-
 @Component({
   selector: 'app-car-transfer-list',
   standalone: true,
-  imports: [DataTable, TableCard],
+  imports: [DataTable, TableCard, CommonModule],
   templateUrl: './car-transfer-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -21,9 +22,17 @@ import { getCarTransferTableColumns } from '../../../configs/car-transfer-table-
     CarTransferTableDataSource,
   ],
 })
-export class CarTransferList {
+export class CarTransferList implements AfterViewInit {
   readonly dataSource = inject(CarTransferTableDataSource);
-  readonly columns: TableColumn<CarTransferDetail>[] = getCarTransferTableColumns();
+  columns: TableColumn<CarTransferDetail>[] = getCarTransferTableColumns();
+
+  @ViewChild('netCostTemplate') netCostTemplate!: TemplateRef<{ $implicit: CarTransferDetail; value: unknown }>;
+
+  ngAfterViewInit(): void {
+    this.columns = this.columns.map((col) =>
+      col.key === 'netCost' ? { ...col, cellTemplate: this.netCostTemplate } : col,
+    );
+  }
 
   private readonly selectedMonth = select(MonthFilterState.selectedMonth);
   private readonly selectedYear = select(MonthFilterState.selectedYear);

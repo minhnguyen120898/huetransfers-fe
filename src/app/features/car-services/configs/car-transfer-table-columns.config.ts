@@ -43,8 +43,6 @@ export function getCarTransferTableColumns(): TableColumn<CarTransferDetail>[] {
       header: 'Net Cost',
       type: 'text',
       format: (value) => formatVnd(value),
-      cellClass: (row) =>
-        row.netCost > 0 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold',
     },
   ];
 }
