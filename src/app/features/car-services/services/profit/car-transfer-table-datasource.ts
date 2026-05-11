@@ -44,10 +44,7 @@ export class CarTransferTableDataSource extends AbstractTableDataSource<CarTrans
     this.dataService.refresh();
   }
 
-  protected override areRowsEqual(
-    row1: CarTransferDetail,
-    row2: CarTransferDetail,
-  ): boolean {
+  protected override areRowsEqual(row1: CarTransferDetail, row2: CarTransferDetail): boolean {
     return (
       row1.originalBookingCode === row2.originalBookingCode &&
       row1.transferBookingCode === row2.transferBookingCode

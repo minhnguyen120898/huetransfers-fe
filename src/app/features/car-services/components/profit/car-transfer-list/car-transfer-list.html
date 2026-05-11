@@ -12,7 +12,7 @@
 </app-table-card>
 
 <ng-template #netCostTemplate let-row="$implicit">
-  <span [class]="row.netCost > 0 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold'">
+  <span [class]="row.netCost > 0 ? 'text-red-600 font-semibold whitespace-nowrap' : 'text-green-600 font-semibold whitespace-nowrap'">
     {{ row.netCost | vndCurrency }}
   </span>
 </ng-template>

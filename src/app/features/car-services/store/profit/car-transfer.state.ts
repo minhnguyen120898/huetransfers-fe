@@ -49,9 +49,7 @@ export class CarTransferState {
     ctx.patchState({ loading: true, error: null, lastQueryParams: action.params });
     return this.carProfitService.getCarTransfers(action.params).pipe(
       tap((response) => {
-        ctx.dispatch(
-          new CarTransferActions.LoadCarTransfersSuccess(response.data, response.meta),
-        );
+        ctx.dispatch(new CarTransferActions.LoadCarTransfersSuccess(response.data, response.meta));
       }),
       catchError((error) => {
         ctx.dispatch(
