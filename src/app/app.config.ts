@@ -25,7 +25,7 @@ import { SettingsState } from '@features/settings';
 import { CarBookingState } from '@features/car-services/store/bookings';
 import { ExpenseState } from '@features/car-services/store/expenses';
 import { CarBookingDebtState } from '@features/car-services/store/debt';
-import { CarProfitState } from '@features/car-services/store/profit';
+import { CarProfitState, CarTransferState } from '@features/car-services/store/profit';
 import { MonthFilterState } from '@core/store/month-filter';
 import { UserManagementState } from '@features/users/store/user-management.state';
 import { vi } from 'date-fns/locale';
@@ -56,6 +56,7 @@ export const appConfig: ApplicationConfig = {
         ExpenseState,
         CarBookingDebtState,
         CarProfitState,
+        CarTransferState,
         MonthFilterState,
         UserManagementState,
       ],
