@@ -203,16 +203,14 @@ sellingPrice: this.fb.control({ value: ..., disabled: this.isReadOnly }),
 receivingPrice: this.fb.control({ value: ..., disabled: this.isReadOnly }),
 ```
 
-### `syncReceivingPrice` — skip in transferred mode
+### `syncReceivingPrice` — unchanged, runs on init with booking's paymentCollection
 
-```typescript
-private syncReceivingPrice(paymentCollection: CarPaymentCollection | ''): void {
-  if (this.isReadOnly || this.isCompletedMode || this.isTransferredMode) return;
-  // ... existing logic
-}
-```
+The existing `syncReceivingPrice` logic is kept exactly as-is. In transferred mode, `paymentCollection` is disabled (the operator cannot change it), but `syncReceivingPrice` is still called during `constructor()` with the current form value — which reflects `booking.paymentCollection`. This means:
 
-In transferred mode `receivingPrice` is always enabled (no paymentCollection gating).
+- If the booking has `paymentCollection = COLLECT_FROM_GUEST` → `receivingPrice` is enabled and required
+- If the booking has `paymentCollection = NO_COLLECTION` → `receivingPrice` stays disabled
+
+No change needed to `syncReceivingPrice`.
 
 ### `onSubmit()` — new branch
 
