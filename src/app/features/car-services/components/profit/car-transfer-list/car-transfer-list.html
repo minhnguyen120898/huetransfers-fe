@@ -1,0 +1,12 @@
+<app-table-card title="Transfer Details">
+  <app-data-table
+    table
+    [dataSource]="dataSource"
+    [columns]="columns"
+    [paginated]="true"
+    emptyStateIcon="swap_horiz"
+    emptyStateTitle="No transfers"
+    emptyStateMessage="No transfer bookings found for this month."
+    [tableMaxHeightClass]="'max-h-[32rem]'"
+  />
+</app-table-card>
