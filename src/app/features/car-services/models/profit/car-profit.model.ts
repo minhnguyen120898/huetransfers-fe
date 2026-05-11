@@ -1,6 +1,15 @@
+import { PaginationMeta } from '@core/models/api.model';
+
 export interface CarProfitQueryParams {
   year: number;
   month: number;
+}
+
+export interface CarTransferQueryParams {
+  year: number;
+  month: number;
+  page?: number;
+  limit?: number;
 }
 
 export interface CarBookingFinancials {
@@ -26,7 +35,11 @@ export interface CarTransferFinancials {
   totalOriginalSellingPrice: number;
   totalCompensationAmount: number;
   netTransferCost: number;
-  transfers: CarTransferDetail[];
+}
+
+export interface PaginatedCarTransfers {
+  data: CarTransferDetail[];
+  meta: PaginationMeta;
 }
 
 export interface CarExpenseByCategory {
