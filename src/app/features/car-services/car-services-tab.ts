@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { CarBookingList } from './components/bookings';
 import { ExpenseList } from './components/expenses';
 import { CarBookingDebtList } from './components/debt';
-import { CarProfitSummary } from './components/profit';
+import { CarProfitSummary, CarTransferList } from './components/profit';
 
 @Component({
   selector: 'app-car-services-tab',
@@ -15,6 +15,7 @@ import { CarProfitSummary } from './components/profit';
     ExpenseList,
     CarBookingDebtList,
     CarProfitSummary,
+    CarTransferList,
   ],
   templateUrl: './car-services-tab.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
