@@ -1,5 +1,14 @@
-import { Component, ChangeDetectionStrategy, inject, effect, ViewChild, AfterViewInit, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  effect,
+  ViewChild,
+  AfterViewInit,
+  TemplateRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { VndCurrencyPipe } from '@shared/pipes';
 import { select } from '@ngxs/store';
 import { MonthFilterState } from '@core/store/month-filter';
 import { DataTable } from '@shared/components/data-table/data-table';
@@ -14,7 +23,7 @@ import { getCarTransferTableColumns } from '../../../configs/car-transfer-table-
 @Component({
   selector: 'app-car-transfer-list',
   standalone: true,
-  imports: [DataTable, TableCard, CommonModule],
+  imports: [DataTable, TableCard, CommonModule, VndCurrencyPipe],
   templateUrl: './car-transfer-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -26,7 +35,10 @@ export class CarTransferList implements AfterViewInit {
   readonly dataSource = inject(CarTransferTableDataSource);
   columns: TableColumn<CarTransferDetail>[] = getCarTransferTableColumns();
 
-  @ViewChild('netCostTemplate') netCostTemplate!: TemplateRef<{ $implicit: CarTransferDetail; value: unknown }>;
+  @ViewChild('netCostTemplate') netCostTemplate!: TemplateRef<{
+    $implicit: CarTransferDetail;
+    value: unknown;
+  }>;
 
   ngAfterViewInit(): void {
     this.columns = this.columns.map((col) =>
