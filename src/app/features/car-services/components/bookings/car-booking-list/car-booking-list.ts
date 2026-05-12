@@ -36,6 +36,7 @@ import {
   UpdateCarBookingDto,
   TransferCarBookingDto,
   UpdateCarBookingTransferPricingDto,
+  UpdateCarOriginalPricingDto,
 } from '@core/models/car-booking.model';
 import { PaymentStatus } from '@core/models/booking.model';
 import { CarBookingState } from '../../../store/bookings/car-booking.state';
@@ -58,6 +59,7 @@ import { CarBookingFormDialog } from '../car-booking-form-dialog/car-booking-for
 import { CarBookingDetailView } from '../car-booking-detail-view/car-booking-detail-view';
 import { TransferCarBookingDialog } from '../transfer-car-booking-dialog/transfer-car-booking-dialog';
 import { EditTransferPricingDialog } from '../edit-transfer-pricing-dialog/edit-transfer-pricing-dialog';
+import { EditOriginalPricingDialog } from '../edit-original-pricing-dialog/edit-original-pricing-dialog';
 import { DateFormat, formatDate } from '@core/config';
 
 interface CarBookingFiltersForm {
@@ -84,6 +86,7 @@ interface CarBookingFiltersForm {
     SearchBar,
     TableCard,
     VndCurrencyPipe,
+    EditOriginalPricingDialog,
   ],
   providers: [
     CarBookingTableDataSource,
@@ -205,6 +208,22 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
   }
 
   onEdit(booking: CarBooking): void {
+    if (booking.status === CarBookingStatus.TRANSFERRED) {
+      const dialogRef = this.dialog.open(EditOriginalPricingDialog, {
+        width: '450px',
+        disableClose: true,
+        data: { booking },
+      });
+      dialogRef.afterClosed().subscribe((dto: UpdateCarOriginalPricingDto | null) => {
+        if (dto) {
+          this.store
+            .dispatch(new CarBookingActions.UpdateOriginalPricing(booking.id, dto))
+            .subscribe(() => this.dataSource.refresh());
+        }
+      });
+      return;
+    }
+
     const dialogRef = this.dialog.open(CarBookingFormDialog, {
       ...LARGE_DIALOG,
       disableClose: true,
