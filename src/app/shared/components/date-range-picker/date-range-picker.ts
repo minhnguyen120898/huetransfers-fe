@@ -45,6 +45,10 @@ export class DateRangePicker implements OnInit {
     }
   }
 
+  setRange(range: DateRange): void {
+    this.range.setValue({ start: range.start, end: range.end });
+  }
+
   clear(): void {
     this.range.reset();
     this.dateRangeChange.emit({ start: null, end: null });

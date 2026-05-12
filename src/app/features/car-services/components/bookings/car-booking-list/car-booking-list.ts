@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, FormControl } from '@angular/forms';
-import { format, endOfMonth, parseISO } from 'date-fns';
+import { format, endOfMonth } from 'date-fns';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -107,10 +107,14 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
   readonly dateRange = select(MonthFilterState.dateRange);
 
   readonly defaultDateRange = computed<DateRange>(() => {
-    const range = this.dateRange();
+    const month = this.selectedMonth();
+    const year = this.selectedYear();
+    const today = new Date();
+    const isCurrentMonth = year === today.getFullYear() && month === today.getMonth() + 1;
+    const firstOfMonth = new Date(year, month - 1, 1);
     return {
-      start: new Date(),
-      end: endOfMonth(parseISO(range.endDate)),
+      start: isCurrentMonth ? today : firstOfMonth,
+      end: endOfMonth(firstOfMonth),
     };
   });
 
@@ -120,6 +124,8 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
   readonly PaymentStatus = PaymentStatus;
 
   // Template references for custom columns
+  @ViewChild(DateRangePicker) dateRangePicker?: DateRangePicker;
+
   @ViewChild('currencyTemplate', { static: true }) currencyTemplate!: TemplateRef<{
     $implicit: CarBooking;
     value: unknown;
@@ -151,6 +157,7 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
           serviceDateTo: format(def.end!, 'yyyy-MM-dd'),
         });
         this.loadCountByStatus();
+        this.dateRangePicker?.setRange(def);
       });
     });
   }
