@@ -50,7 +50,7 @@ interface EditTransferPricingForm {
             <mat-label>Compensation Amount (×1000đ)</mat-label>
             <input
               matInput
-              type="number"
+              type="text"
               formControlName="compensationAmount"
               vndCurrencyFormat
               min="1"
@@ -96,7 +96,7 @@ export class EditTransferPricingDialog {
 
   readonly form = this.fb.group<EditTransferPricingForm>({
     compensationAmount: this.fb.control<number | null>(
-      this.data.booking.sellingPrice > 0 ? this.data.booking.sellingPrice / 1000 : null,
+      this.getTransferPricing(this.data.booking),
       [Validators.required, Validators.min(1)],
     ),
     reason: this.fb.control(''),
@@ -117,5 +117,13 @@ export class EditTransferPricingDialog {
       reason: raw.reason || undefined,
     };
     this.dialogRef.close(dto);
+  }
+
+  private getTransferPricing(booking: CarBooking) {
+    const transfer = booking.transferBookings.length > 0 ? booking.transferBookings[0] : undefined;
+    if (transfer) {
+      return transfer.sellingPrice / 1000;
+    }
+    return null;
   }
 }

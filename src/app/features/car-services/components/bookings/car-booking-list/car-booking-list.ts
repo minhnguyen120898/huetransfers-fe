@@ -60,7 +60,6 @@ import { CarBookingDetailView } from '../car-booking-detail-view/car-booking-det
 import { TransferCarBookingDialog } from '../transfer-car-booking-dialog/transfer-car-booking-dialog';
 import { EditTransferPricingDialog } from '../edit-transfer-pricing-dialog/edit-transfer-pricing-dialog';
 import { EditOriginalPricingDialog } from '../edit-original-pricing-dialog/edit-original-pricing-dialog';
-import { DateFormat, formatDate } from '@core/config';
 
 interface CarBookingFiltersForm {
   search: FormControl<string>;

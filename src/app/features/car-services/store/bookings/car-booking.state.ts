@@ -500,21 +500,17 @@ export class CarBookingState {
     action: CarBookingActions.UpdateOriginalPricing,
   ) {
     ctx.patchState({ loading: true, error: null });
-    return this.carBookingService
-      .updateOriginalPricing(action.originalBookingId, action.dto)
-      .pipe(
-        tap((response) =>
-          ctx.dispatch(new CarBookingActions.UpdateOriginalPricingSuccess(response)),
-        ),
-        catchError((error) => {
-          ctx.dispatch(
-            new CarBookingActions.UpdateOriginalPricingFailure(
-              error.message || 'Failed to update original pricing',
-            ),
-          );
-          return of(error);
-        }),
-      );
+    return this.carBookingService.updateOriginalPricing(action.originalBookingId, action.dto).pipe(
+      tap((response) => ctx.dispatch(new CarBookingActions.UpdateOriginalPricingSuccess(response))),
+      catchError((error) => {
+        ctx.dispatch(
+          new CarBookingActions.UpdateOriginalPricingFailure(
+            error.message || 'Failed to update original pricing',
+          ),
+        );
+        return of(error);
+      }),
+    );
   }
 
   @Action(CarBookingActions.UpdateOriginalPricingSuccess)

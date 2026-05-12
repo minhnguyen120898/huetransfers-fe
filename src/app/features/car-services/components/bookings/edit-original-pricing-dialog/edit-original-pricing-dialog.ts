@@ -63,10 +63,15 @@ interface EditOriginalPricingForm {
             <mat-form-field subscriptSizing="dynamic" appearance="outline">
               <mat-label>Selling Price (×1000đ)</mat-label>
               <input matInput type="text" formControlName="sellingPrice" vndCurrencyFormat />
-              @if (form.controls.sellingPrice.touched && form.controls.sellingPrice.hasError('required')) {
+              @if (
+                form.controls.sellingPrice.touched &&
+                form.controls.sellingPrice.hasError('required')
+              ) {
                 <mat-error>Selling price is required</mat-error>
               }
-              @if (form.controls.sellingPrice.touched && form.controls.sellingPrice.hasError('min')) {
+              @if (
+                form.controls.sellingPrice.touched && form.controls.sellingPrice.hasError('min')
+              ) {
                 <mat-error>Must be ≥ 0</mat-error>
               }
             </mat-form-field>
@@ -74,10 +79,15 @@ interface EditOriginalPricingForm {
             <mat-form-field subscriptSizing="dynamic" appearance="outline">
               <mat-label>Receiving Price (×1000đ)</mat-label>
               <input matInput type="text" formControlName="receivingPrice" vndCurrencyFormat />
-              @if (form.controls.receivingPrice.touched && form.controls.receivingPrice.hasError('required')) {
+              @if (
+                form.controls.receivingPrice.touched &&
+                form.controls.receivingPrice.hasError('required')
+              ) {
                 <mat-error>Receiving price is required</mat-error>
               }
-              @if (form.controls.receivingPrice.touched && form.controls.receivingPrice.hasError('min')) {
+              @if (
+                form.controls.receivingPrice.touched && form.controls.receivingPrice.hasError('min')
+              ) {
                 <mat-error>Must be ≥ 0</mat-error>
               }
             </mat-form-field>
@@ -136,11 +146,8 @@ export class EditOriginalPricingDialog {
     receivingPrice: this.fb.control<number | null>(
       {
         value:
-          this.data.booking.receivingPrice != null
-            ? this.data.booking.receivingPrice / 1000
-            : null,
-        disabled:
-          this.data.booking.paymentCollection !== CarPaymentCollection.COLLECT_FROM_GUEST,
+          this.data.booking.receivingPrice != null ? this.data.booking.receivingPrice / 1000 : null,
+        disabled: this.data.booking.paymentCollection !== CarPaymentCollection.COLLECT_FROM_GUEST,
       },
       [Validators.min(0)],
     ),
