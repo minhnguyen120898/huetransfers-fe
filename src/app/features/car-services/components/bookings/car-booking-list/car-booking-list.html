@@ -39,6 +39,7 @@
       <app-date-range-picker
         class="w-full md:max-w-70 flex-shrink-0"
         label="Service Date"
+        [defaultValue]="defaultDateRange()"
         (dateRangeChange)="onDateRangeChange($event)"
       />
 

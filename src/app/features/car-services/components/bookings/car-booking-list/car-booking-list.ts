@@ -4,13 +4,14 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  computed,
   effect,
   inject,
   untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, FormControl } from '@angular/forms';
-import { format } from 'date-fns';
+import { format, endOfMonth, parseISO } from 'date-fns';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -105,6 +106,14 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
   readonly selectedYear = select(MonthFilterState.selectedYear);
   readonly dateRange = select(MonthFilterState.dateRange);
 
+  readonly defaultDateRange = computed<DateRange>(() => {
+    const range = this.dateRange();
+    return {
+      start: new Date(),
+      end: endOfMonth(parseISO(range.endDate)),
+    };
+  });
+
   // Enums for template
   readonly CarBookingStatusFilter = CarBookingStatusFilter;
   readonly CarBookingStatus = CarBookingStatus;
@@ -135,16 +144,14 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
   constructor() {
     // Auto-load when month filter changes
     effect(() => {
-      const range = this.dateRange();
-      if (range) {
-        untracked(() => {
-          this.dataSource.setFilters({
-            serviceDateFrom: range.startDate,
-            serviceDateTo: range.endDate,
-          });
-          this.loadCountByStatus();
+      const def = this.defaultDateRange();
+      untracked(() => {
+        this.dataSource.setFilters({
+          serviceDateFrom: format(def.start!, 'yyyy-MM-dd'),
+          serviceDateTo: format(def.end!, 'yyyy-MM-dd'),
         });
-      }
+        this.loadCountByStatus();
+      });
     });
   }
 
@@ -189,10 +196,10 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
         serviceDateTo: format(range.end, 'yyyy-MM-dd'),
       });
     } else {
-      const monthRange = this.dateRange();
+      const def = this.defaultDateRange();
       this.dataSource.setFilters({
-        serviceDateFrom: monthRange.startDate,
-        serviceDateTo: monthRange.endDate,
+        serviceDateFrom: format(def.start!, 'yyyy-MM-dd'),
+        serviceDateTo: format(def.end!, 'yyyy-MM-dd'),
       });
     }
   }
