@@ -492,6 +492,61 @@ export class CarBookingState {
     this.notification.showError(action.error || 'Failed to update transfer pricing');
   }
 
+  // ─── Update Original Pricing ─────────────────────────────────────────────────
+
+  @Action(CarBookingActions.UpdateOriginalPricing)
+  updateOriginalPricing(
+    ctx: StateContext<CarBookingStateModel>,
+    action: CarBookingActions.UpdateOriginalPricing,
+  ) {
+    ctx.patchState({ loading: true, error: null });
+    return this.carBookingService
+      .updateOriginalPricing(action.originalBookingId, action.dto)
+      .pipe(
+        tap((response) =>
+          ctx.dispatch(new CarBookingActions.UpdateOriginalPricingSuccess(response)),
+        ),
+        catchError((error) => {
+          ctx.dispatch(
+            new CarBookingActions.UpdateOriginalPricingFailure(
+              error.message || 'Failed to update original pricing',
+            ),
+          );
+          return of(error);
+        }),
+      );
+  }
+
+  @Action(CarBookingActions.UpdateOriginalPricingSuccess)
+  updateOriginalPricingSuccess(
+    ctx: StateContext<CarBookingStateModel>,
+    action: CarBookingActions.UpdateOriginalPricingSuccess,
+  ) {
+    const state = ctx.getState();
+    const carBookings = state.carBookings.map((b) =>
+      b.id === action.response.originalBooking.id ? action.response.originalBooking : b,
+    );
+    ctx.patchState({
+      carBookings,
+      selectedCarBooking:
+        state.selectedCarBooking?.id === action.response.originalBooking.id
+          ? action.response.originalBooking
+          : state.selectedCarBooking,
+      loading: false,
+      error: null,
+    });
+    this.notification.showSuccess('Original pricing updated successfully');
+  }
+
+  @Action(CarBookingActions.UpdateOriginalPricingFailure)
+  updateOriginalPricingFailure(
+    ctx: StateContext<CarBookingStateModel>,
+    action: CarBookingActions.UpdateOriginalPricingFailure,
+  ) {
+    ctx.patchState({ loading: false, error: action.error });
+    this.notification.showError(action.error || 'Failed to update original pricing');
+  }
+
   // ─── Select / Clear ──────────────────────────────────────────────────────────
 
   @Action(CarBookingActions.SelectCarBooking)
