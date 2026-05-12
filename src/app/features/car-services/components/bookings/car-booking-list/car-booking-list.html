@@ -2,38 +2,42 @@
   <ng-container actions>
     <form [formGroup]="filtersForm" class="flex flex-wrap gap-3 items-end justify-end w-full">
       <!-- Status filter -->
-      <mat-form-field
-        class="w-[45%] sm:w-36 form-field-sm"
-        subscriptSizing="dynamic"
-        appearance="outline"
-      >
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status" (selectionChange)="onStatusChange($event.value)">
-          <mat-option [value]="CarBookingStatusFilter.All">All</mat-option>
-          <mat-option [value]="CarBookingStatusFilter.Confirmed">Confirmed</mat-option>
-          <mat-option [value]="CarBookingStatusFilter.Completed">Completed</mat-option>
-          <mat-option [value]="CarBookingStatusFilter.Cancelled">Cancelled</mat-option>
-          <mat-option [value]="CarBookingStatusFilter.Transferred">Transferred</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="hidden md:block">
+        <mat-form-field
+          class="w-[45%] sm:w-36 form-field-sm"
+          subscriptSizing="dynamic"
+          appearance="outline"
+        >
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status" (selectionChange)="onStatusChange($event.value)">
+            <mat-option [value]="CarBookingStatusFilter.All">All</mat-option>
+            <mat-option [value]="CarBookingStatusFilter.Confirmed">Confirmed</mat-option>
+            <mat-option [value]="CarBookingStatusFilter.Completed">Completed</mat-option>
+            <mat-option [value]="CarBookingStatusFilter.Cancelled">Cancelled</mat-option>
+            <mat-option [value]="CarBookingStatusFilter.Transferred">Transferred</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
       <!-- Payment status filter -->
-      <mat-form-field
-        class="w-[45%] sm:w-36 form-field-sm"
-        subscriptSizing="dynamic"
-        appearance="outline"
-      >
-        <mat-label>Payment</mat-label>
-        <mat-select
-          formControlName="paymentStatus"
-          (selectionChange)="onPaymentStatusChange($event.value)"
+      <div class="hidden md:block">
+        <mat-form-field
+          class="w-[45%] sm:w-36 form-field-sm"
+          subscriptSizing="dynamic"
+          appearance="outline"
         >
-          <mat-option value="">All</mat-option>
-          <mat-option [value]="PaymentStatus.PENDING">Pending</mat-option>
-          <mat-option [value]="PaymentStatus.PARTIAL">Partial</mat-option>
-          <mat-option [value]="PaymentStatus.COMPLETED">Paid</mat-option>
-        </mat-select>
-      </mat-form-field>
+          <mat-label>Payment</mat-label>
+          <mat-select
+            formControlName="paymentStatus"
+            (selectionChange)="onPaymentStatusChange($event.value)"
+          >
+            <mat-option value="">All</mat-option>
+            <mat-option [value]="PaymentStatus.PENDING">Pending</mat-option>
+            <mat-option [value]="PaymentStatus.PARTIAL">Partial</mat-option>
+            <mat-option [value]="PaymentStatus.COMPLETED">Paid</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
       <!-- Date range filter -->
       <app-date-range-picker
