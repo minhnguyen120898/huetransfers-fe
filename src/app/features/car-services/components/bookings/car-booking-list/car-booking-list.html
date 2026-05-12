@@ -35,6 +35,13 @@
         </mat-select>
       </mat-form-field>
 
+      <!-- Date range filter -->
+      <app-date-range-picker
+        class="w-full md:max-w-70 flex-shrink-0"
+        label="Service Date"
+        (dateRangeChange)="onDateRangeChange($event)"
+      />
+
       <!-- Search -->
       <div class="flex-1 md:max-w-64">
         <app-search-bar placeholder="Search bookings..." (searchChange)="onSearchChange($event)" />

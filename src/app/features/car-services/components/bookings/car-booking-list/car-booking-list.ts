@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, FormControl } from '@angular/forms';
+import { format } from 'date-fns';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -24,14 +25,13 @@ import { TableAction } from '@shared/components/data-table/models/table-action.m
 import { SearchBar } from '@shared/components/search-bar/search-bar';
 import { TableCard } from '@shared/components/table-card/table-card';
 import { ConfirmDialog } from '@shared/components/confirm-dialog/confirm-dialog';
-import { RightSideSheetService } from '@shared/components';
+import { RightSideSheetService, DateRangePicker, DateRange } from '@shared/components';
 import { VndCurrencyPipe } from '@shared/pipes';
 import { LARGE_DIALOG } from '@core/config/dialog.config';
 import { AgencyActions } from '@features/agencies/store/agency.actions';
 import {
   CarBooking,
   CarBookingStatus,
-  CarBookingQueryParams,
   CreateCarBookingDto,
   UpdateCarBookingDto,
   TransferCarBookingDto,
@@ -39,7 +39,6 @@ import {
   UpdateCarOriginalPricingDto,
 } from '@core/models/car-booking.model';
 import { PaymentStatus } from '@core/models/booking.model';
-import { CarBookingState } from '../../../store/bookings/car-booking.state';
 import { CarBookingActions } from '../../../store/bookings/car-booking.actions';
 import {
   CarBookingDataService,
@@ -85,7 +84,7 @@ interface CarBookingFiltersForm {
     SearchBar,
     TableCard,
     VndCurrencyPipe,
-    EditOriginalPricingDialog,
+    DateRangePicker,
   ],
   providers: [
     CarBookingTableDataSource,
@@ -181,6 +180,21 @@ export class CarBookingList implements OnInit, CarBookingActionHandlers {
 
   onPaymentStatusChange(paymentStatus: PaymentStatus | ''): void {
     this.dataSource.setFilter('paymentStatus', paymentStatus || undefined);
+  }
+
+  onDateRangeChange(range: DateRange): void {
+    if (range.start && range.end) {
+      this.dataSource.setFilters({
+        serviceDateFrom: format(range.start, 'yyyy-MM-dd'),
+        serviceDateTo: format(range.end, 'yyyy-MM-dd'),
+      });
+    } else {
+      const monthRange = this.dateRange();
+      this.dataSource.setFilters({
+        serviceDateFrom: monthRange.startDate,
+        serviceDateTo: monthRange.endDate,
+      });
+    }
   }
 
   openCreateDialog(): void {
