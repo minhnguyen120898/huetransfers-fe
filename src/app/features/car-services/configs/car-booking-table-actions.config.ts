@@ -11,7 +11,7 @@ export interface CarBookingActionHandlers {
 }
 
 const isEditDisabled = (booking: CarBooking): boolean =>
-  booking.status === CarBookingStatus.CANCELLED || booking.status === CarBookingStatus.TRANSFERRED;
+  booking.status === CarBookingStatus.CANCELLED;
 
 const isCancelDisabled = (booking: CarBooking): boolean =>
   booking.status !== CarBookingStatus.CONFIRMED && booking.status !== CarBookingStatus.TRANSFERRED;
