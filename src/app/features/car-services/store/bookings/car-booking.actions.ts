@@ -11,6 +11,8 @@ import {
   TransferCarBookingResponse,
   UpdateCarBookingDto,
   UpdateCarBookingTransferPricingDto,
+  UpdateCarOriginalPricingDto,
+  UpdateCarOriginalPricingResponse,
 } from '@core/models/car-booking.model';
 import { PaginationMeta } from '@core/models/api.model';
 
@@ -159,6 +161,24 @@ export namespace CarBookingActions {
 
   export class UpdateTransferPricingFailure {
     static readonly type = '[CarBooking] Update Transfer Pricing Failure';
+    constructor(public error: string) {}
+  }
+
+  export class UpdateOriginalPricing {
+    static readonly type = '[CarBooking] Update Original Pricing';
+    constructor(
+      public originalBookingId: string,
+      public dto: UpdateCarOriginalPricingDto,
+    ) {}
+  }
+
+  export class UpdateOriginalPricingSuccess {
+    static readonly type = '[CarBooking] Update Original Pricing Success';
+    constructor(public response: UpdateCarOriginalPricingResponse) {}
+  }
+
+  export class UpdateOriginalPricingFailure {
+    static readonly type = '[CarBooking] Update Original Pricing Failure';
     constructor(public error: string) {}
   }
 
