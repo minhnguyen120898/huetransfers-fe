@@ -153,6 +153,15 @@ export interface UpdateCarBookingTransferPricingDto {
   reason?: string;
 }
 
+export interface UpdateCarOriginalPricingDto {
+  sellingPrice: number;
+  receivingPrice: number;
+}
+
+export interface UpdateCarOriginalPricingResponse {
+  originalBooking: CarBooking;
+}
+
 export interface BulkPaymentStatusDto {
   bookingIds: string[];
   paymentStatus: PaymentStatus;
