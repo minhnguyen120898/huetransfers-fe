@@ -15,6 +15,8 @@ import {
   TransferCarBookingResponse,
   UpdateCarBookingDto,
   UpdateCarBookingTransferPricingDto,
+  UpdateCarOriginalPricingDto,
+  UpdateCarOriginalPricingResponse,
 } from '@core/models/car-booking.model';
 
 @Injectable({ providedIn: 'root' })
@@ -74,6 +76,16 @@ export class CarBookingService extends BaseHttpService {
   ): Observable<TransferCarBookingResponse> {
     return this.patch<TransferCarBookingResponse>(
       `${this.endpoint}/${originalBookingId}/transfer-pricing`,
+      dto,
+    );
+  }
+
+  updateOriginalPricing(
+    id: string,
+    dto: UpdateCarOriginalPricingDto,
+  ): Observable<UpdateCarOriginalPricingResponse> {
+    return this.patch<UpdateCarOriginalPricingResponse>(
+      `${this.endpoint}/${id}/original-pricing`,
       dto,
     );
   }
